@@ -1,18 +1,16 @@
 module.exports = {
-  token:{
-    expire: 1000
+  token: {
+    maxAge: 60 * 60 * 1
   },
   mongodb: {
     url: 'mongodb://localhost/personel'
   },
-  redis:{
-    port:6379,
-    host:'127.0.0.1',
-    family:4,
-    //password:'auth',
-    //db:0
+  redis: {
+    port: 6379,
+    host: '127.0.0.1',
+    family: 4
   },
-  websocket:{
+  websocket: {
     serveClient: true
   }
 };

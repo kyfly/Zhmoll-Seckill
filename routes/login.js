@@ -1,11 +1,23 @@
-var express = require('express');
-var router = express.Router();
+const router = require('express').Router();
 
-var User = require('../models/users');
-var Reply = require('../models/replies');
-var Token = require('../models/tokens');
+const User = require('../models/users');
+const Reply = require('../models/replies');
+const Token = require('../models/tokens');
 
-var redis = require('../lib/redis');
+async function checkCredential(credential) {
+  // 1、检查数据格式是否合法
+  if (!credential || !credential.uid || !credential.name)
+    throw new Error({ code: 5001, isSuccessful: false, message: '数据格式不正确！' });
+  // 2、检查学号和姓名是否符合要求、匹配
+  const user = await User.findOne({ uid: credential.uid });
+  if (!user)
+    throw new Error({ code: 4001, isSuccessful: false, message: '学号/工号不正确！' });
+  if (user.name != credential.name)
+    throw new Error({ code: 4002, isSuccessful: false, message: '学号/工号与姓名不匹配！' });
+  // 3、返回Token
+  const token = await Token.getByUserid(credential.uid);
+  return token;
+}
 
 // {
 //   uid:'14051534',
@@ -13,26 +25,14 @@ var redis = require('../lib/redis');
 // }
 router.post('/', function (req, res, next) {
   const credential = req.body;
-  if (!credential.uid || !credential.name)
-    return res.json(new Reply(false, 5001, '数据格式不正确！'));
 
-  User.findOne({ uid: credential.uid }, function (err, user) {
-    if (err)
-      return next(err);
-    if (!user)
-      return res.json(new Reply(false, 4001, '学号/工号不正确！'));
-    if (user.name != credential.name)
-      return res.json(new Reply(false, 4002, '学号/工号与姓名不匹配！'));
-
-    // 验证成功，credential换token，一个credential只能使一个token生效
-    const token = Token.genToken();
-    redis.hset('userToken', credential.uid, token, function (err, result) {
-      if (err)
-        return next(err);
-      if (result == '0')
-        return res.json(new Reply(true, 4000, '验证成功！', { token: token }));
+  checkCredential(credential)
+    .then((token) => {
+      return res.json(new Reply(true, 4000, '验证成功！', { token: token }));
+    })
+    .catch((e) => {
+      return res.json(new Reply(e));
     });
-  });
 });
 
 module.exports = router;
