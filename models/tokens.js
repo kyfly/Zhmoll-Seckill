@@ -17,7 +17,7 @@ const tokenSchema = new Schema({
   token: { type: String, unique: true },
   uid: { type: String, unique: true },
   createdAt: { type: String, default: Date.now(), expires: config.maxAge }
-});
+}, { versionKey: false });
 
 tokenSchema.statics.getByUserid = function (userid) {
   return new Promise(async (resolve, reject) => {
@@ -28,8 +28,8 @@ tokenSchema.statics.getByUserid = function (userid) {
     const newTokenStr = _gen();
     const newToken = await this.create({ token: newTokenStr, uid: userid });
     // 3、将token放到redis的token池里面
-    redis.sadd('tokenPool', newToken);
-    return resolve(newToken);
+    await redis.TokenPool.add(newTokenStr);
+    return resolve(newTokenStr);
   });
 };
 
