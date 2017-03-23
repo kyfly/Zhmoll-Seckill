@@ -27,6 +27,8 @@ tokenSchema.statics.getByUserid = function (userid) {
     // 2、没有的话就生成一个返回
     const newTokenStr = _gen();
     const newToken = await this.create({ token: newTokenStr, uid: userid });
+    // 3、将token放到redis的token池里面
+    redis.sadd('tokenPool', newToken);
     return resolve(newToken);
   });
 };
