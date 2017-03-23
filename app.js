@@ -1,14 +1,17 @@
-var express = require('express');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-var path = require('path');
-var router = require('./routes');
-var unfoundHandler = require('./middlewares/unfoundHandler');
-var errorHandler = require('./middlewares/errorHandler');
+const express = require('express');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const path = require('path');
+const router = require('./routes');
+const unfoundHandler = require('./middlewares/unfoundHandler');
+const errorHandler = require('./middlewares/errorHandler');
 
-var app = express();
 
-app.use(logger('dev'));
+
+const app = express();
+
+app.use(require('./middlewares/cors'));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
