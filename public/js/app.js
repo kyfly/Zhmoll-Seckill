@@ -13,16 +13,10 @@ socket.on('connect', function () {
   socket.emit('auth', { uid: '14051534', token: token });
 });
 
-socket.on('disconnect', function () {
-  document
-    .getElementById('receiver')
-    .innerHTML += '<p> 连接被关闭 </p>';
-});
-
 socket.on('welcome', function (data) {
   document
     .getElementById('receiver')
-    .innerHTML += '<p> 第一次连接：' + data + '</p>';
+    .innerHTML += '<p> 服务器连接成功 </p>';
 });
 
 socket.on('time', function (data) {
@@ -37,12 +31,18 @@ socket.on('message', function (data) {
     .innerHTML += '<p> 服务器说：' + data + '</p>';
 });
 
+socket.on('disconnect', function () {
+  document
+    .getElementById('receiver')
+    .innerHTML += '<p> 连接被关闭 </p>';
+});
+
 function clickBtn1() {
   socket.open();
 }
 
 function clickBtn2() {
-  socket.emit('kill');
+  socket.emit('submitkill');
 }
 
 function clickBtn() {
