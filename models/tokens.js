@@ -1,4 +1,4 @@
-const config = require('config-lite').token;
+const config = require('config-lite');
 const redis = require('../lib/redis');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -16,7 +16,7 @@ function _gen(len) {
 const tokenSchema = new Schema({
   token: { type: String, unique: true },
   uid: { type: String, unique: true },
-  createdAt: { type: String, default: Date.now(), expires: config.maxAge }
+  createdAt: { type: Date, default: Date.now(), expires: '3h' }
 }, { versionKey: false });
 
 tokenSchema.statics.getByUserid = function (userid) {

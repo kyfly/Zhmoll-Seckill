@@ -1,7 +1,4 @@
 module.exports = {
-  token: {
-    maxAge: 60 * 60 * 1
-  },
   mongodb: {
     url: 'mongodb://localhost/personel'
   },
