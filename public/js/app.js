@@ -10,7 +10,7 @@ var socket = io('/seckill', {
 });
 
 socket.on('connect', function () {
-  socket.emit('auth', { seckillid:'test' ,uid: '14051534', token: token });
+  socket.emit('auth', { seckillid: 'test', token: token });
 });
 
 socket.once('welcome', function (data) {
@@ -49,6 +49,12 @@ socket.on('seckillSucceed', function (data) {
     .innerHTML += '<span>★</span>';
 });
 
+socket.on('seckillAgain', function (data) {
+  document
+    .getElementById('receiver')
+    .innerHTML += '<span>♢</span>';
+});
+
 socket.on('seckillFail', function () {
   document
     .getElementById('receiver')
@@ -67,8 +73,8 @@ function clickBtn1() {
 
 function clickBtn2() {
   // 记得前端也要限制次数
-  for(let i=0;i<5;i++)
-  socket.emit('submitkill');
+  for (let i = 0; i < 5; i++)
+    socket.emit('submitkill');
 }
 
 function clickBtn3() {
