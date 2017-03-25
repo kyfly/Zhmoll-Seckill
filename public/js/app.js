@@ -4,16 +4,16 @@ document.onload = function () {
 
 let token;
 
-var socket = io('/' + 'seckillId', {
+var socket = io('/seckill', {
   reconnectionAttempts: 3,
   autoConnect: false
 });
 
 socket.on('connect', function () {
-  socket.emit('auth', { uid: '14051534', token: token });
+  socket.emit('auth', { seckillid:'test' ,uid: '14051534', token: token });
 });
 
-socket.on('welcome', function (data) {
+socket.once('welcome', function (data) {
   document
     .getElementById('receiver')
     .innerHTML += '<p> 服务器连接成功 </p>';
@@ -31,16 +31,28 @@ socket.on('message', function (data) {
     .innerHTML += '<span> 服务器说：' + data + '</span>';
 });
 
-socket.on('changeRemainNum', function (num) {
+// socket.on('changeRemainNum', function (num) {
+//   document
+//     .getElementById('receiver')
+//     .innerHTML += '<p> 还剩' + num + '个 </p>';
+// });
+
+// socket.on('changeOnlineNum', function (num) {
+//   document
+//     .getElementById('receiver')
+//     .innerHTML += '<p> 还剩' + num + '个 </p>';
+// });
+
+socket.on('seckillSucceed', function (data) {
   document
     .getElementById('receiver')
-    .innerHTML += '<p> 还剩' + num + '个 </p>';
+    .innerHTML += '<span>★</span>';
 });
 
-socket.on('result', function (data) {
+socket.on('seckillFail', function () {
   document
     .getElementById('receiver')
-    .innerHTML += '<span> 服务器说：' + data + '</span>';
+    .innerHTML += '<span>☆</span>';
 });
 
 socket.on('disconnect', function () {
@@ -55,6 +67,7 @@ function clickBtn1() {
 
 function clickBtn2() {
   // 记得前端也要限制次数
+  for(let i=0;i<5;i++)
   socket.emit('submitkill');
 }
 
