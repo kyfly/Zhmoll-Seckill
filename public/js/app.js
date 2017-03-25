@@ -28,7 +28,19 @@ socket.on('time', function (data) {
 socket.on('message', function (data) {
   document
     .getElementById('receiver')
-    .innerHTML += '<p> 服务器说：' + data + '</p>';
+    .innerHTML += '<span> 服务器说：' + data + '</span>';
+});
+
+socket.on('changeRemainNum', function (num) {
+  document
+    .getElementById('receiver')
+    .innerHTML += '<p> 还剩' + num + '个 </p>';
+});
+
+socket.on('result', function (data) {
+  document
+    .getElementById('receiver')
+    .innerHTML += '<span> 服务器说：' + data + '</span>';
 });
 
 socket.on('disconnect', function () {
@@ -42,7 +54,16 @@ function clickBtn1() {
 }
 
 function clickBtn2() {
+  // 记得前端也要限制次数
   socket.emit('submitkill');
+}
+
+function clickBtn3() {
+  $.get('/api/add', function (data, status) {
+    document
+      .getElementById('receiver')
+      .innerHTML += '<p> 服务器说：' + data + ' </p>';
+  });
 }
 
 function clickBtn() {
