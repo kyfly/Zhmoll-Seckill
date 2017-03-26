@@ -27,10 +27,10 @@ router.post('/', function (req, res, next) {
   const credential = req.body;
 
   checkCredential(credential)
-    .then((token) => {
+    .then(token => {
       return res.json(new Reply(true, 4000, '验证成功！', { token: token }));
     })
-    .catch((e) => {
+    .catch(e => {
       return res.json(new Reply(e));
     });
 });
