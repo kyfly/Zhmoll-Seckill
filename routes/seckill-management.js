@@ -1,7 +1,10 @@
 const router = require('express').Router();
+const User = require('../models/users');
 const Seckill = require('../models/seckills');
+const SeckillResult = require('../models/seckillResults');
 const redis = require('../lib/redis');
 const util = require('../lib/util');
+const config = require('config-lite');
 
 function _gen(len) {
   len = len || 15;
@@ -79,8 +82,13 @@ router.put('/:seckillid', (req, res, next) => {
 // get /api/seckill-management/:seckillid/enable
 router.get('/:seckillid/enable', (req, res, next) => {
   const seckill = res.locals.seckill;
-  seckill.enable = true;
+  if (seckill.enable)
+    return res.json(util.reply(4507, '该秒杀已启用'));
+  const countdown = seckill.startAt - Date.now();
+  // if (countdown < 60 * 60 * 1000)
+  //   return res.json(util.reply(4506, '请将秒杀启用时间设置为至少一小时以后！'));
 
+  seckill.enable = true;
   redis.Seckill.addSeckill(seckill.id, seckill.startAt.getTime()).then();
   seckill.content.forEach(item => {
     const award = {};
@@ -94,7 +102,7 @@ router.get('/:seckillid/enable', (req, res, next) => {
   seckill.save((err, result) => {
     if (err) return res.json(util.reply(err));
     if (result)
-      return res.json(util.reply(4504, '启用该秒杀成功', seckill));
+      return res.json(util.reply(4504, '启用该秒杀成功'));
   });
 });
 
@@ -102,6 +110,8 @@ router.get('/:seckillid/enable', (req, res, next) => {
 // delete /api/seckill-management/:seckillid
 router.delete('/:seckillid', (req, res, next) => {
   const seckill = res.locals.seckill;
+  if (seckill.enable)
+    return res.json(util.reply(4507, '秒杀活动已启用，无法删除！'));
   seckill.isDeleted = true;
   seckill.save((err, result) => {
     if (err) return res.json(util.reply(err));
@@ -111,3 +121,44 @@ router.delete('/:seckillid', (req, res, next) => {
 });
 
 module.exports = router;
+
+// 创建者获得秒杀活动获奖名单
+// get /api/seckill-management/:seckillid/awardlist
+router.get('/:seckillid/awardlist', (req, res, next) => {
+  const seckill = res.locals.seckill;
+  if (!seckill.enable)
+    return res.json(util.reply(4601, '秒杀活动尚未启用！'));
+  const countdown = seckill.startAt - Date.now();
+  if (countdown > -config.seckill.downloadAwardlist)
+    return res.json(util.reply(4602, '请在秒杀活动开始20分钟后再获取获奖列表'));
+
+  const xlsx = require('node-xlsx');
+  const consequnce = [];
+  consequnce.push(['用户id', '学工号', '姓名', '奖品id', '奖品名称', '奖品描述']);
+  (async () => {
+    results = await SeckillResult
+      .where('seckillid').equals(seckill.id).select('userid content description');
+    for (let item of results) {
+      await (async () => {
+        const userid = String(item.userid);
+        const awardname = item.content.name;
+        const awardid = item.content.id;
+        const awarddescription = item.content.description;
+        user = await User.findById(userid, 'uid name');
+        const uid = user.uid;
+        const username = user.name;
+        consequnce.push([userid, uid, username, awardid, awardname, awarddescription]);
+      })();
+    }
+  })()
+    .then(() => {
+      const buffer = xlsx.build([{ name: seckill.title + '_结果', data: consequnce }]);
+      const filename = 'consequnce.xlsx'//encodeURIComponent(seckill.title + '_结果.xlsx');
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', 'attachment;filename=' + filename);
+      return res.end(buffer);
+    })
+    .catch(e => {
+      return res.json(util.reply(e));
+    });
+});
