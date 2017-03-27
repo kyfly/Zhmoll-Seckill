@@ -10,7 +10,7 @@ var socket = io('/seckill', {
 });
 
 socket.on('connect', function () {
-  socket.emit('auth', { seckillid: 'test', token: token });
+  socket.emit('auth', { seckillid: document.getElementById('seckillid').value, token: token });
 });
 
 socket.on('welcome', function (data) {
@@ -86,20 +86,13 @@ function clickBtn1() {
 
 function clickBtn2() {
   // 记得前端也要限制次数
-  // for (let i = 0; i < 10; i++)
-  socket.emit('submitkill');
-}
-
-function clickBtn3() {
-  $.get('/api/add', function (data, status) {
-    document
-      .getElementById('receiver')
-      .innerHTML += '<p> 服务器说：' + data + ' </p>';
-  });
+  for (let i = 0; i < 4; i++)
+    socket.emit('submitkill');
 }
 
 function clickBtn() {
-  $.post('/api/login', {
+  seckillid = document.getElementById('seckillid').value;
+  $.post('/api/seckill/' + seckillid + '/join', {
     uid: document.getElementById('uid').value,
     name: document.getElementById('name').value
   }, function (data, status) {

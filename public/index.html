@@ -9,11 +9,12 @@
 </head>
 
 <body>
-  <input type="text" id="uid"></input><input type="text" id="name"></input>
+  <input type="text" id="seckillid"></input><br />
+  <input type="text" id="uid"></input><br />
+  <input type="text" id="name"></input><br />
   <button onclick="clickBtn();">登陆</button>
   <button onclick="clickBtn1();">连接websocket</button>
   <button onclick="clickBtn2();">抢票</button>
-  <button onclick="clickBtn3();">给奖品池添加奖品</button>
   <span id="time">0</span> <span id="online_count">0</span> <span id="award_rest">0</span>
   <div id="receiver"></div>
   <script src="/socket.io/socket.io.js"></script>
