@@ -66,7 +66,7 @@ socket.on('failure', function (result) {
         .innerHTML += '<span> 还差一点点，再试一次！ </span>';
       break;
   }
-})
+});
 
 socket.on('succeed', function (name) {
   document

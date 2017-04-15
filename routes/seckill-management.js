@@ -64,6 +64,11 @@ router.get('/:seckillid', (req, res, next) => {
 router.put('/:seckillid', (req, res, next) => {
   const data = req.body;
   const seckill = res.locals.seckill;
+
+  if (seckill.enable) {
+    return res.json(util.reply(4508, '秒杀活动已启用，无法修改！', seckill));
+  }
+
   seckill.title = data.title || seckill.title;
   seckill.logoUrl = data.logoUrl || seckill.logoUrl;
   seckill.description = data.description || seckill.description;
@@ -85,8 +90,8 @@ router.get('/:seckillid/enable', (req, res, next) => {
   if (seckill.enable)
     return res.json(util.reply(4507, '该秒杀已启用'));
   const countdown = seckill.startAt - Date.now();
-  // if (countdown < 60 * 60 * 1000)
-  //   return res.json(util.reply(4506, '请将秒杀启用时间设置为至少一小时以后！'));
+  if (countdown < 60 * 60 * 1000)
+    return res.json(util.reply(4506, '请将秒杀启用时间设置为至少一小时以后！'));
 
   seckill.enable = true;
   redis.Seckill.addSeckill(seckill.id, seckill.startAt.getTime()).then();
@@ -111,7 +116,7 @@ router.get('/:seckillid/enable', (req, res, next) => {
 router.delete('/:seckillid', (req, res, next) => {
   const seckill = res.locals.seckill;
   if (seckill.enable)
-    return res.json(util.reply(4507, '秒杀活动已启用，无法删除！'));
+    return res.json(util.reply(4509, '秒杀活动已启用，无法删除！'));
   seckill.isDeleted = true;
   seckill.save((err, result) => {
     if (err) return res.json(util.reply(err));

@@ -1,6 +1,6 @@
 module.exports = {
   mongodb: {
-    url: 'mongodb://localhost/personel'
+    url: 'mongodb://localhost/seckill-beta'
   },
   redis: {
     port: 6379,
