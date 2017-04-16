@@ -11,8 +11,8 @@ module.exports = {
     serveClient: true
   },
   seckill: {
-    checkLimit: 19,
-    checkTime: 2000,
+    checkLimit: 28,
+    checkTime: 3000,
     allowLoginLeft: 30 * 60 * 1000,
     allowLoginRight: 15 * 60 * 1000,
     cachePreserveLimit: 30 * 60 * 1000,    // 最长秒杀开始后多少毫秒内cache断开引用
