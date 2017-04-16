@@ -24,7 +24,7 @@ var vm = new Vue({
             name: ''
         },
         online: 10,
-        allTicket: 50,
+        total: 0,
         rest: 50,
         token: '',
         seckillid: '58f4083fced53c3746c7d32c',
@@ -35,6 +35,10 @@ var vm = new Vue({
         axios.get('/api/seckill/' + this.seckillid).then(function (response) {
             serverRequest = response.data;
             console.log(serverRequest)
+            var flag=0;
+            serverRequest.body.content.forEach(item=>{flag+=item.limit});
+            console.log('flag is'+flag)
+            vm.total=flag;
         }).catch(function (error) {
             console.log(error)
         })
