@@ -19,32 +19,32 @@ router.get('/', (req, res, next) => {
     });
 });
 
-// 查找指定秒杀活动
-// * /api/seckill/:seckillid
-router.use('/:seckillid', (req, res, next) => {
+function getSeckillById(req, res, next) {
   const seckillid = req.params.seckillid;
-  const Schema = require('mongoose').Schema;
+
   Seckill
-    .findOne({ id: Schema.ObjectId(seckillid), enable: true, isDeleted: false })
+    .findOne({ _id: seckillid, enable: true, isDeleted: false })
     .select('-isDeleted -enable')
     .exec((err, seckill) => {
       if (err) res.json(util.reply(err));
       if (!seckill)
         return res.json(util.reply(4102, '找不到该秒杀活动'));
-      res.locals.seckill = seckill;
+      req.seckill = seckill;
       next();
     });
-});
+}
 
-router.get('/:seckillid', (req, res, next) => {
-  const seckill = res.locals.seckill;
+// 查找指定秒杀活动
+// get /api/seckill/:seckillid 
+router.get('/:seckillid', getSeckillById, (req, res, next) => {
+  const seckill = req.seckill;
   return res.json(util.reply(4101, '获取秒杀活动成功', seckill));
-})
+});
 
 // 参加指定秒杀活动
 // post /api/seckill/:seckillid/join
-router.post('/:seckillid/join', (req, res, next) => {
-  const seckill = res.locals.seckill;
+router.post('/:seckillid/join', getSeckillById, (req, res, next) => {
+  const seckill = req.seckill;
   const credential = req.body;
   (async () => {
     // 1、检查数据格式是否合法

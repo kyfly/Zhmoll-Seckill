@@ -1,5 +1,5 @@
+const util = require('../lib/util');
+
 module.exports = function (req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.json(util.reply(5000, '错误的路由请求'));
 };

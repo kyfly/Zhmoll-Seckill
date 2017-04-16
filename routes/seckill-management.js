@@ -37,7 +37,7 @@ router.post('/', (req, res, next) => {
 
 // 寻找id对应的seckill中间件
 // * /api/seckill-management/:seckillid
-router.use('/:seckillid', (req, res, next) => {
+function getSeckillById(req, res, next) {
   const seckillid = req.params.seckillid;
   (async () => {
     const seckill = await Seckill.findById(seckillid);
@@ -46,24 +46,24 @@ router.use('/:seckillid', (req, res, next) => {
     return seckill
   })()
     .then(seckill => {
-      res.locals.seckill = seckill;
+      req.seckill = seckill;
       return next();
     })
     .catch(e => res.json(util.reply(e)));
-});
+}
 
 // 创建者获取中间件
 // get /api/seckill-management/:seckillid
-router.get('/:seckillid', (req, res, next) => {
-  const seckill = res.locals.seckill;
+router.get('/:seckillid', getSeckillById, (req, res, next) => {
+  const seckill = req.seckill;
   return res.send(util.reply(4500, '获取秒杀活动成功', seckill));
 });
 
 // 创建者修改中间件
 // put /api/seckill-management/:seckillid
-router.put('/:seckillid', (req, res, next) => {
+router.put('/:seckillid', getSeckillById, (req, res, next) => {
   const data = req.body;
-  const seckill = res.locals.seckill;
+  const seckill = req.seckill;
 
   if (seckill.enable) {
     return res.json(util.reply(4508, '秒杀活动已启用，无法修改！', seckill));
@@ -85,8 +85,8 @@ router.put('/:seckillid', (req, res, next) => {
 
 // 创建者启用秒杀
 // get /api/seckill-management/:seckillid/enable
-router.get('/:seckillid/enable', (req, res, next) => {
-  const seckill = res.locals.seckill;
+router.get('/:seckillid/enable', getSeckillById, (req, res, next) => {
+  const seckill = req.seckill;
   if (seckill.enable)
     return res.json(util.reply(4507, '该秒杀已启用'));
   const countdown = seckill.startAt - Date.now();
@@ -113,8 +113,8 @@ router.get('/:seckillid/enable', (req, res, next) => {
 
 // 创建者删除秒杀活动
 // delete /api/seckill-management/:seckillid
-router.delete('/:seckillid', (req, res, next) => {
-  const seckill = res.locals.seckill;
+router.delete('/:seckillid', getSeckillById, (req, res, next) => {
+  const seckill = req.seckill;
   if (seckill.enable)
     return res.json(util.reply(4509, '秒杀活动已启用，无法删除！'));
   seckill.isDeleted = true;
@@ -129,8 +129,8 @@ module.exports = router;
 
 // 创建者获得秒杀活动获奖名单
 // get /api/seckill-management/:seckillid/awardlist
-router.get('/:seckillid/awardlist', (req, res, next) => {
-  const seckill = res.locals.seckill;
+router.get('/:seckillid/awardlist', getSeckillById, (req, res, next) => {
+  const seckill = req.seckill;
   if (!seckill.enable)
     return res.json(util.reply(4601, '秒杀活动尚未启用！'));
   const countdown = seckill.startAt - Date.now();
@@ -158,7 +158,7 @@ router.get('/:seckillid/awardlist', (req, res, next) => {
   })()
     .then(() => {
       const buffer = xlsx.build([{ name: seckill.title + '_结果', data: consequnce }]);
-      const filename = 'consequnce.xlsx'//encodeURIComponent(seckill.title + '_结果.xlsx');
+      const filename = 'consequnce.xlsx';
       res.setHeader('Content-Type', 'application/octet-stream');
       res.setHeader('Content-Disposition', 'attachment;filename=' + filename);
       return res.end(buffer);
