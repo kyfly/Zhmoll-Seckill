@@ -1,0 +1,237 @@
+/* reset */
+body, html, ul, ol, li, dl, dt, dd, header, menu, section, p, table, input, td, th, ins {
+	padding: 0;
+	margin: 0;
+}
+html,body {
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+ul{
+	font-size: 0px;
+}
+textarea, select, input, button {
+	color: #444;
+	font: 12px 'Microsoft Yahei',"Arial", "Hiragino Sans GB", "Helvetica", "sans-serif";
+	-webkit-text-size-adjust: none;
+}
+section, header, main, article, aside, ins {
+	display: block;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: normal;
+	padding: 0;
+	margin: 0;
+	color: #333;
+	font-family: 'Microsoft Yahei', '微软雅黑', 'Simsun', '宋体', 'Arial';
+}
+p, span, a{
+	color: #d8173b;
+	font-family: 'Microsoft Yahei', '微软雅黑', 'Simsun', '宋体', 'Arial';
+}
+em, i {
+	font-style: normal;
+	font-size: inherit;
+}
+img {
+	border: 0;
+}
+textarea {
+	resize: none;
+	overflow: auto;
+}
+input:focus, textarea:focus, span:focus, a:focus, button:focus {
+	outline: none;
+}
+a:link, a:hover, a:visited {
+	text-decoration: none;
+}
+a, button {
+	cursor: pointer;
+	font-family: 'Microsoft Yahei', '微软雅黑', 'Simsun', '宋体', 'Arial';
+}
+ul, ol, li {
+	list-style: none;
+}
+body{
+	background: url('../img/bg-pc.jpg') 0 0/cover no-repeat;
+}
+body>div{
+	height: 100%;
+}
+
+/* nav style */
+.g-nav{
+	height: 38px;
+	background-color: #1f6cb0;
+}
+.g-nav .logo{
+	width: 38px;
+}
+
+/* middle style */
+.g-mid{
+	text-align: center;	
+}
+.g-mid .m-title{
+	text-align: center;
+	margin: 40px 0 20px 0;
+	font-size: 38px;
+	color: rgba(211, 170, 118, 0.84);
+}
+
+.g-mid #m-time{
+	text-align: center;
+	margin: 20px 0 50px 0;
+	font-size: 30px;
+	color: #dd356e;
+}
+.g-mid .m-form{
+	position: relative;
+	display: inline-block;
+	/* display: none; */
+	width: 70%;
+	margin-top: 35px;
+	text-align: center;	
+}
+.g-mid .m-form input{
+	width: 80%;
+	min-width: 220px;
+	max-width: 560px;
+	padding: 5px;
+	margin-bottom: 30px;
+	border: 0;
+	border-bottom: 1px solid #34699a;
+	background-color: transparent;
+	font-size: 15px;
+}
+
+.m-form .login{
+	width: 70px;
+	text-align: center;	
+	font-size: 15px;
+	margin-bottom: 30px;
+	background-color: #6eb6ff;
+	border-color: #6eb6ff;
+}
+.m-form .login:active{
+	background-color: #4993fa;
+	border-color: #4993fa;
+}
+.m-ticket .total,.m-ticket .rest ,.m-ticket .pcount{
+	line-height: 1.5;
+	font-size: 20px;
+	color:  rgb(221, 56, 111);
+}
+
+.g-mid .m-ticket{
+	margin-top:138px;
+	/* display: none; */
+}
+
+.m-ticket .grab{
+	width: 76px;
+	height: 76px;
+	margin-top: 230px;
+	font-weight: bold;
+	color: #f9a1bc; 
+	background-color: rgba(238, 238, 238, 0.83);
+	border: 1px solid #eb89b5;
+	box-shadow: 0 0 5px #eb89b5;
+	border-radius: 38px;
+}
+
+.m-ticket .grab:active{
+	color: #eb89b5;
+	box-shadow:inset 0 0 5px #eb89b5;
+}
+
+.invite__form {
+	margin: 15px auto;
+	background-color: rgba(0, 0, 0, 0.16);
+	text-align: left;
+	max-width: 350px;
+	color: #333;
+	padding: 30px;
+	font-size: 18px;
+	border-radius: 3px;
+	padding-bottom: 15px;
+	box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.5);
+}
+.CenteredPage__field {
+	color:#f5f5f5;
+	margin-bottom: 15px;
+}
+.CenteredPage__field input, .CenteredPage__field textarea {
+	display: block;
+	width: 100%;
+	font: inherit;
+	outline: none;
+	height: 40px;
+	color: white;
+	border: 0;
+	border-bottom: 1px solid #ddd;
+	background-color: rgba(158, 177, 197, 0.42);
+}
+.btn-raised.btn-primary {
+	background-color:rgba(150, 151, 152, 0.82);
+}
+.CenteredPage__field .btn-raised {
+	width: 100%;
+	margin: 0;
+}
+.btn-raised {
+	padding: 12px 20px;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 20px;
+	text-transform: uppercase;
+	color: white !important;
+	font-family: inherit;
+	cursor: pointer;
+	display: inline-block;
+	text-decoration: none;
+	text-align: center;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+	background-color: #999;
+	z-index: 2;
+	position: relative;
+	border: 0;
+	border-radius: 3px;
+	-webkit-font-smoothing: subpixel-antialiased;
+	box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.5);
+	-webkit-transition: all .1s;
+	transition: all .1s;
+	outline: 0;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+#main{
+	display: none
+}
+
+/* 中等屏幕（大于等于 992px） */
+@media screen and (min-width: 992px) {
+	.g-mid .m-title{
+		font-size: 38px;
+	}
+	.g-mid .m-form{
+		margin-top: 50px;
+	}
+	.g-mid .m-form input{
+		margin-bottom: 50px;
+	}
+}
+@media screen and (max-width:750px) {
+	body{
+	 background: url('../img/bg-mo.jpg') 0 0/cover no-repeat;
+	}	
+}
