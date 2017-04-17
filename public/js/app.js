@@ -18,7 +18,7 @@ setInterval(function () {
 var vm = new Vue({
     el: "#app",
     data: {
-        ok: false,
+        ok: true,
         stu: {
             id: '',
             name: ''
@@ -34,10 +34,8 @@ var vm = new Vue({
     mounted: function () {
         axios.get('/api/seckill/' + this.seckillid).then(function (response) {
             serverRequest = response.data;
-            console.log(serverRequest)
             var flag=0;
             serverRequest.body.content.forEach(item=>{flag+=item.limit});
-            console.log('flag is'+flag)
             vm.total=flag;
             vm.rest=flag;
         }).catch(function (error) {
@@ -63,10 +61,8 @@ var vm = new Vue({
             toastr.success('恭喜你抢到票啦!!!')
         },
         message: function (data) {
-            console.log(data)
             if (data.t) {
                 this.countDown = data.t - Date.now();
-                console.log('set countDown=' + countDown)
             }
             if (data.e) {
                 toastr.error(data.e)
