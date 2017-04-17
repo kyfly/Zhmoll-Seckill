@@ -1,13 +1,16 @@
 const router = require('express').Router();
 const User = require('../models/users');
 const Seckill = require('../models/seckills');
-const SeckillResult = require('../models/seckillResults');
+const Token = require('../models/tokens');
+// const SeckillResult = require('../models/seckillResults');
 const redis = require('../lib/redis');
 const util = require('../lib/util');
 const config = require('config-lite');
+const xlsx = require('node-xlsx');
+const querystring = require('querystring');
 
 function _gen(len) {
-  len = len || 15;
+  len = len || 30;
   const charset = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
   const maxPos = charset.length;
   let result = '';
@@ -125,45 +128,55 @@ router.delete('/:seckillid', getSeckillById, (req, res, next) => {
   });
 });
 
-module.exports = router;
-
 // 创建者获得秒杀活动获奖名单
 // get /api/seckill-management/:seckillid/awardlist
 router.get('/:seckillid/awardlist', getSeckillById, (req, res, next) => {
   const seckill = req.seckill;
+
   if (!seckill.enable)
     return res.json(util.reply(4601, '秒杀活动尚未启用！'));
+
   const countdown = seckill.startAt - Date.now();
   if (countdown > -config.seckill.downloadAwardlist)
     return res.json(util.reply(4602, '请在秒杀活动开始20分钟后再获取获奖列表'));
 
-  const xlsx = require('node-xlsx');
   const consequnce = [];
   consequnce.push(['用户id', '学工号', '姓名', '奖品id', '奖品名称', '奖品描述']);
+
   (async () => {
-    results = await SeckillResult
-      .where('seckillid').equals(seckill.id).select('userid content description');
-    for (let item of results) {
+    // 构造结果数组
+    awardlist = await Token
+      .where('seckillid').equals(seckill.id)
+      .select('userid content description');
+    for (let item of awardlist) {
       await (async () => {
         const userid = String(item.userid);
-        const awardname = item.content.name;
-        const awardid = item.content.id;
-        const awarddescription = item.content.description;
+        const award_name = item.content.name;
+        const award_id = item.content.id;
+        const award_description = item.content.description;
         user = await User.findById(userid, 'uid name');
         const uid = user.uid;
         const username = user.name;
-        consequnce.push([userid, uid, username, awardid, awardname, awarddescription]);
+        consequnce.push([userid, uid, username, award_id, award_name, award_description]);
       })();
     }
   })()
     .then(() => {
+      // 构造获奖xlsx文件
       const buffer = xlsx.build([{ name: seckill.title + '_结果', data: consequnce }]);
-      const filename = 'consequnce.xlsx';
+      const filename = seckill.title + '_结果.xlsx';
       res.setHeader('Content-Type', 'application/octet-stream');
-      res.setHeader('Content-Disposition', 'attachment;filename=' + filename);
+      res.setHeader('Content-Disposition', 'attachment;filename=' + querystring.escape(filename));
       return res.end(buffer);
     })
     .catch(e => {
       return res.json(util.reply(e));
     });
 });
+
+// 创建者更新秒杀活动 todo
+// get /api/seckill-management/:seckillid/fetchaward
+router.get('/:seckillid/fetchaward', getSeckillById, function (req, res, next) {
+
+});
+module.exports = router;
