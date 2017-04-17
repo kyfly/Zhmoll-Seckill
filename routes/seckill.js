@@ -4,6 +4,7 @@ const Seckill = require('../models/seckills');
 const Token = require('../models/tokens');
 const util = require('../lib/util');
 const config = require('config-lite');
+const redis = require('../lib/redis');
 
 // 首页 
 // get /api/seckill
@@ -65,8 +66,15 @@ router.post('/:seckillid/join', getSeckillById, (req, res, next) => {
     else if (countdown < -config.seckill.allowLoginRight)
       throw util.standardError(4004, '活动已结束');
 
-    // 4、返回Token
-    return await Token.fetch(user.id, seckill.id);
+    // 4、查找是否已经有token有就直接返回
+    const token = await Token.findOne({ userid: user.id, seckillid: seckill.id });
+    if (token) return token.token;
+
+    // 5、没有找到token就生成一个token
+    const newTokenStr = util.genToken();
+    await Token.create({ token: newTokenStr, userid: user.id, seckillid: seckill.id });
+    await redis.TokenPool.add(seckill.id, newTokenStr);
+    return newTokenStr;
   })()
     .then(token => res.json(util.reply(4000, '验证成功！', { token: token })))
     .catch(e => res.json(util.reply(e)));

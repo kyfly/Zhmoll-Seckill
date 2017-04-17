@@ -93,8 +93,8 @@ router.get('/:seckillid/enable', getSeckillById, (req, res, next) => {
   if (seckill.enable)
     return res.json(util.reply(4507, '该秒杀已启用'));
   const countdown = seckill.startAt - Date.now();
-  if (countdown < 60 * 60 * 1000)
-    return res.json(util.reply(4506, '请将秒杀启用时间设置为至少一小时以后！'));
+  // if (countdown < config.seckill.allowLoginLeft)
+  //   return res.json(util.reply(4506, '请将秒杀启用时间设置为至少'+(allowLoginLeft/1000/60)+'分钟以后'));
 
   seckill.enable = true;
   redis.Seckill.addSeckill(seckill.id, seckill.startAt.getTime()).then();
