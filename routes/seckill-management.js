@@ -93,8 +93,8 @@ router.get('/:seckillid/enable', getSeckillById, (req, res, next) => {
   if (seckill.enable)
     return res.json(util.reply(4507, '该秒杀已启用'));
   const countdown = seckill.startAt - Date.now();
-  if (countdown < 60 * 60 * 1000)
-    return res.json(util.reply(4506, '请将秒杀启用时间设置为至少一小时以后！'));
+  // if (countdown < config.seckill.allowLoginLeft)
+  //   return res.json(util.reply(4506, '请将秒杀启用时间设置为至少' + (config.seckill.allowLoginLeft / 1000 / 60) + '分钟以后'));
 
   seckill.enable = true;
   redis.Seckill.addSeckill(seckill.id, seckill.startAt.getTime()).then();
@@ -103,7 +103,7 @@ router.get('/:seckillid/enable', getSeckillById, (req, res, next) => {
     award.name = item.name;
     award.description = item.description;
     for (let i = 0; i < item.limit; i++) {
-      award.id = _gen();
+      award.id = _gen(10);
       redis.Seckill.putAward(seckill.id, award).then();
     }
   });
@@ -174,9 +174,15 @@ router.get('/:seckillid/awardlist', getSeckillById, (req, res, next) => {
     });
 });
 
-// 创建者更新秒杀活动 todo
+// 创建者主动秒杀活动奖品
 // get /api/seckill-management/:seckillid/fetchaward
 router.get('/:seckillid/fetchaward', getSeckillById, function (req, res, next) {
+  const seckill = req.seckill;
 
+  if (!seckill.enable)
+    return res.json(util.reply(4601, '秒杀活动尚未启用！'));
+
+  redis.Seckill.persist(seckill.id);
+  res.json(util.reply(4603, '强制更新奖品名单成功'));
 });
 module.exports = router;
