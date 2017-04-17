@@ -25,7 +25,7 @@ var vm = new Vue({
         },
         online: 10,
         total: 0,
-        rest: 50,
+        rest: 0,
         token: '',
         seckillid: '58f4083fced53c3746c7d32c',
         start: '',
@@ -39,6 +39,7 @@ var vm = new Vue({
             serverRequest.body.content.forEach(item=>{flag+=item.limit});
             console.log('flag is'+flag)
             vm.total=flag;
+            vm.rest=flag;
         }).catch(function (error) {
             console.log(error)
         })
