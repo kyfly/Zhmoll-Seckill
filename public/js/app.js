@@ -40,7 +40,6 @@ var vm = new Vue({
         if (localStorage[seckillid]) {
             var seckill_in_cache = JSON.parse(localStorage[seckillid]);
             initContent(this.seckill, seckill_in_cache);
-            this.rest_count = localStorage[seckillid] || localStorage[seckillid].totalAwardCount;
         }
         // 3、发起请求
         axios.get('/api/seckill/' + seckillid)

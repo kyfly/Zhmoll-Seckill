@@ -196,7 +196,7 @@ body>div{
 	margin: 0;
 }
 .btn:focus{
-	outline: 0;
+	outline: 0!important;
 }
 .btn-raised {
 	padding: 12px 20px;
