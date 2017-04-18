@@ -36,23 +36,30 @@
             <!-- 登录后 -->
             <div class="row" v-if="isLogin==true">
                 <div class="m-ticket">
-                    <ul class="countdown">
+                    <!--<ul class="countdown">
                         <li> <span class="hours">00</span>
-                            <p class="hours_ref">hours</p>
                         </li>
                         <li class="seperator">:</li>
                         <li> <span class="minutes">00</span>
-                            <p class="minutes_ref">minutes</p>
                         </li>
                         <li class="seperator">:</li>
                         <li> <span class="seconds">00</span>
-                            <p class="seconds_ref">seconds</p>
                         </li>
-                    </ul>
-                    <p class="hello">你好，<span>{{field_name}}</span>!</p>
+                    </ul>-->
+                    <p class="hello"style="display:none">你好，<span>{{field_name}}</span>!</p>
                     <p class="pcount">在线 : <span>{{online_count}}</span></p>
                     <p class="total">总数 : <span>{{seckill.totalAwardCount}}</span></p>
                     <p class="rest">余量 : <span>{{rest_count}}</span></p>
+                     <ul class="countdown">
+                        <li> <span class="hours">00</span>
+                        </li>
+                        <li class="seperator">:</li>
+                        <li> <span class="minutes">00</span>
+                        </li>
+                        <li class="seperator">:</li>
+                        <li> <span class="seconds">00</span>
+                        </li>
+                    </ul>
                     <button type="button" class="grab btn btn-lg active" v-on:click="kill">抢</button>
                 </div>
             </div>

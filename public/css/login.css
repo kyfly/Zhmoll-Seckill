@@ -140,20 +140,20 @@ body>div{
 
 
 .g-mid .m-ticket{
-	margin-top:22px;
+	margin-top:280px;
 	/* display: none; */
 }
 
 .m-ticket .grab{
-	width: 76px;
-	height: 76px;
-	margin-top: 140px;
+	width: 72px;
+	height: 72px;
+	margin-top: 0px;
 	font-weight: bold;
 	color: #f9a1bc; 
 	background-color: rgba(238, 238, 238, 0.83);
 	border: 1px solid #eb89b5;
 	box-shadow: 0 0 5px #eb89b5;
-	border-radius: 38px;
+	border-radius: 36px;
 }
 
 .m-ticket .grab:active{
@@ -238,7 +238,7 @@ ul.countdown li {
 	display: inline-block;
 }
 ul.countdown li span {
-	font-size: 72px;
+	font-size: 58px;
 	font-weight: 300;
 	line-height: 80px;
 }
@@ -263,9 +263,9 @@ ul.countdown li p {
 		margin-bottom: 50px;
 	}
 }
-@media screen and (max-width:750px) {
+@media screen and (max-width:700px) {
 	body{
-	 background: url('../img/bg-mo.jpg') 0 0/cover no-repeat;
+	 background: url('../img/bg-mo3.jpg') 0 0/cover no-repeat;
 	}	
 	ul.countdown li.seperator{
 		font-size: 54px;
@@ -282,7 +282,9 @@ ul.countdown li p {
 	}
 	.invite__form{
 		background-color: rgba(119, 119, 119, 0.43);
-
+		margin:280px auto;
+		padding:20px;
+		max-width: 300px
 	}
 	.CenteredPage__field input{
 		background-color:rgba(119, 119, 119, 0.41);
@@ -303,14 +305,18 @@ ul.countdown li p {
 		margin-top:160px;
 	}
 	.m-ticket{
-		padding: 0px 20px;
+		padding: 68px 20px;
 	}
 	.m-ticket .total,.m-ticket .rest ,.m-ticket .pcount{
 		color:rgba(100, 129, 153, 0.84)
 	}
 	.m-ticket .grab{
 		color:#5c768e;
-		border:1px solid #5c768e
+		border:1px solid #5c768e;
+		margin-top:-10px
+	}
+	.g-mid .m-ticket{
+		margin:20px
 	}
 	.g-mid .m-title{
 		color:rgba(196, 199, 182, 0.5)
