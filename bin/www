@@ -4,9 +4,10 @@
 const app = require('../app');
 const debug = require('debug')('zhmoll-seckill:server');
 const http = require('http');
+const config = require('config-lite');
 
 // Get port from environment and store in Express.
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || config.port);
 app.set('port', port);
 
 // Create HTTP server.

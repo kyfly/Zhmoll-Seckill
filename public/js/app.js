@@ -1,9 +1,9 @@
 // global
 var socket;
-var clickCount = 8;
+var clickCount = 7;
 var countDown = 0; // 服务器与本地的时间差
 var serverStart = 0; // 服务器活动开始时间
-setInterval(function () { clickCount = 8; }, 1000);
+setInterval(function () { clickCount = 7; }, 1000);
 
 var vm = new Vue({
     el: "#app",
@@ -87,8 +87,7 @@ var vm = new Vue({
             if (serverTime - serverStart > -1000) {
                 if (clickCount > 0) {
                     clickCount--;
-                    for (let i = 0; i < 5; i++)
-                        socket.emit('submitkill');
+                    socket.emit('submitkill');
                 }
                 return;
             }
