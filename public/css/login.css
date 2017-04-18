@@ -195,6 +195,9 @@ body>div{
 	width: 100%;
 	margin: 0;
 }
+.btn:focus{
+	outline: 0;
+}
 .btn-raised {
 	padding: 12px 20px;
 	font-size: 14px;
@@ -250,6 +253,10 @@ ul.countdown li.seperator {
 ul.countdown li p {
 	color: rgba(140, 80, 92, 0.8);
 	font-size: 14px;
+}
+button{
+	outline:none;
+	filter:chroma(color=#000000);
 }
 /* 中等屏幕（大于等于 992px） */
 @media screen and (min-width: 992px) {
