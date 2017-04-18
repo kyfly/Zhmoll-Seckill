@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const Seckill = require('../models/seckills');
+const util = require('../lib/util');
 
 function getSeckillById(req, res, next) {
   const seckillid = req.params.seckillid;

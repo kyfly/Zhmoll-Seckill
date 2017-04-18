@@ -3,6 +3,7 @@ var socket;
 var clickCount = 7;
 var countDown = 0; // 服务器与本地的时间差
 var serverStart = 0; // 服务器活动开始时间
+var login_click_mutex = false; // 登录按钮互斥锁
 setInterval(function () { clickCount = 7; }, 1000);
 
 var vm = new Vue({
@@ -32,21 +33,21 @@ var vm = new Vue({
         // 0、初始化控件
         toastr.options.newestOnTop = false;
         toastr.options.timeOut = 20;
-        var seckillid = window.location.pathname.split('/')[2];
         // 1、获取seckillid
+        var seckillid = window.location.pathname.split('/')[2];
         this.seckillid = seckillid;
         // 2、拿缓存数据
         if (localStorage[seckillid]) {
             var seckill_in_cache = JSON.parse(localStorage[seckillid]);
             initContent(this.seckill, seckill_in_cache);
+            this.rest_count = localStorage[seckillid] || localStorage[seckillid].totalAwardCount;
         }
         // 3、发起请求
         axios.get('/api/seckill/' + seckillid)
             .then(function (res) {
                 // 3、拿到数据
                 var data = res.data;
-                if (data.code != 4101)
-                    throw new Error('获取秒杀活动失败');
+                if (data.code != 4101) throw new Error('获取秒杀活动失败');
                 initContent(vm.seckill, data.body);
                 // 4、标记拿到数据
                 vm.gotSeckill = true;
@@ -59,6 +60,10 @@ var vm = new Vue({
     },
     methods: {
         login: function login_btn() {
+            if (!login_click_mutex)
+                login_click_mutex = true;
+            else
+                return;
             var seckillid = this.seckillid;
             localStorage.uid = this.field_uid;
             localStorage.name = this.field_name;
@@ -76,9 +81,11 @@ var vm = new Vue({
                         case 4102: emitToastr('登录失败，找不到该秒杀活动。', 'error'); break;
                         default: emitToastr('登录失败', 'error'); break;
                     }
+                    login_click_mutex = false;
                 })
                 .catch(function (error) {
                     console.error(error);
+                    login_click_mutex = false;
                 });
         },
         kill: function kill_btn() {
@@ -149,8 +156,8 @@ function login_succeed(token) {
                 initCountdown(vm.seckill.startAt);
             }
             if (data.e) emitToastr(data.e, 'error');
-            if (data.r) vm.rest_count = data.r;
-            if (data.h) vm.online_count = data.h;
+            if (data.r !== undefined) vm.rest_count = data.r;
+            if (data.h !== undefined) vm.online_count = data.h;
             if (data.m) emitToastr(data.m);
         });
         socket.on('disconnect', function () {
