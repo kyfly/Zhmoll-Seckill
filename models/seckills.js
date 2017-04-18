@@ -11,7 +11,14 @@ const SeckillSchema = new Schema({
   content: [{ name: String, description: String, limit: Number }],
   enable: { type: Boolean, default: false },
   isDeleted: { type: Boolean, default: false },
-  consequence: { finishTime: Date, clickCount: Number, attendCount: Number }
+  consequence: {
+    finishTime: Date,
+    clickCount: Number,
+    attendCount: Number,
+    connectCount: Number,
+    loginCount: Number,
+    turnBackCount: Number
+  }
 }, { versionKey: false });
 
 // 一次秒杀活动

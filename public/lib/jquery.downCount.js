@@ -86,6 +86,7 @@
                 ref_seconds = (seconds === 1) ? 'second' : 'seconds';
 
             // set to DOM
+            var container = $('.countdown');
             container.find('.days').text(days);
             container.find('.hours').text(hours);
             container.find('.minutes').text(minutes);
@@ -98,7 +99,7 @@
         };
         
         // start
-        var interval = setInterval(countdown, 1000);
+        var interval = setInterval(countdown, 333);
     };
 
 })(jQuery);

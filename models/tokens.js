@@ -7,7 +7,9 @@ const tokenSchema = new Schema({
   userid: { type: Schema.ObjectId, ref: 'User' },
   seckillid: { type: Schema.ObjectId, ref: 'Seckill' },
   content: { name: String, description: String, id: String },
-  createdAt: { type: Date, default: Date.now() }//, expires: '3h' }
+  createdAt: { type: Date, default: Date.now() },//, expires: '3h' }
+  blocked: { type: Boolean, default: false },
+  blockReason: { type: String }
 }, { versionKey: false });
 
 const Token = mongoose.model('Token', tokenSchema);
