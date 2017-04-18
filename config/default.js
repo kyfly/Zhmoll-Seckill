@@ -9,16 +9,16 @@ module.exports = {
     family: 4
   },
   websocket: {
-    serveClient: true
+    serveClient: false
   },
   seckill: {
     checkLimit: 18,
     checkTime: 2000,
-    allowLoginLeft: 300000 * 60 * 1000,
-    allowLoginRight: 150000 * 60 * 1000,
-    cachePreserveLimit: 300000 * 60 * 1000,    // 最长秒杀开始后多少毫秒内cache断开引用
-    persistAfterStart: 160000 * 60 * 1000,
-    downloadAwardlist: 200000 * 60 * 1000
+    allowLoginLeft: 3000 * 60 * 1000,
+    allowLoginRight: 1500 * 60 * 1000,
+    cachePreserveLimit: 3000 * 60 * 1000,    // 最长秒杀开始后多少毫秒内cache断开引用
+    persistAfterStart: 1600 * 60 * 1000,
+    downloadAwardlist: 2000 * 60 * 1000
   },
   auth: {
     name: 'zhmoll',
