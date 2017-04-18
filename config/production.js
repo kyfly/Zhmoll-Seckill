@@ -1,12 +1,7 @@
 module.exports = {
   port: 3030,
   mongodb: {
-    url: 'mongodb://localhost/seckill-beta'
-  },
-  redis: {
-    port: 6379,
-    host: '127.0.0.1',
-    family: 4
+    url: 'mongodb://seckill:seckill-zhmoll@localhost/seckill-beta'
   },
   websocket: {
     serveClient: true
@@ -19,9 +14,5 @@ module.exports = {
     cachePreserveLimit: 30 * 60 * 1000,    // 最长秒杀开始后多少毫秒内cache断开引用
     persistAfterStart: 16 * 60 * 1000,
     downloadAwardlist: 20 * 60 * 1000
-  },
-  auth: {
-    name: 'zhmoll',
-    pass: '05738526'
   }
 };

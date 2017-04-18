@@ -149,8 +149,8 @@ function login_succeed(token) {
                 initCountdown(vm.seckill.startAt);
             }
             if (data.e) emitToastr(data.e, 'error');
-            if (data.r) vm.rest_count = data.r;
-            if (data.h) vm.online_count = data.h;
+            if (data.r !== undefined) vm.rest_count = data.r;
+            if (data.h !== undefined) vm.online_count = data.h;
             if (data.m) emitToastr(data.m);
         });
         socket.on('disconnect', function () {
