@@ -24,7 +24,7 @@ var vm = new Vue({
         field_uid: localStorage.uid || "",
         field_name: localStorage.name || "",
         // 以下是登录后的信息
-        isLogin: true,
+        isLogin: false,
         online_count: 0,
         rest_count: 0,
         log_box: localStorage.info_box && JSON.parse(localStorage.info_box) || []
@@ -40,7 +40,6 @@ var vm = new Vue({
         if (localStorage[seckillid]) {
             var seckill_in_cache = JSON.parse(localStorage[seckillid]);
             initContent(this.seckill, seckill_in_cache);
-            this.rest_count = localStorage[seckillid] || localStorage[seckillid].totalAwardCount;
         }
         // 3、发起请求
         axios.get('/api/seckill/' + seckillid)
