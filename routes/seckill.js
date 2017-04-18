@@ -64,7 +64,7 @@ router.post('/:seckillid/join', getSeckillById, (req, res, next) => {
     // 3、检查时间是否符合要求
     const countdown = seckill.startAt.getTime() - Date.now();
     if (countdown > config.seckill.allowLoginLeft)
-      throw util.standardError(4003, '请在活动开始前30分钟内加入');
+      throw util.standardError(4003, '请在活动开始前' + (config.seckill.allowLoginLeft / 1000 / 60) + '分钟内加入');
     else if (countdown < -config.seckill.allowLoginRight)
       throw util.standardError(4004, '活动已结束');
 

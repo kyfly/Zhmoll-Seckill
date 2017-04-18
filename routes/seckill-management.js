@@ -98,7 +98,7 @@ router.get('/:seckillid/enable', getSeckillById, (req, res, next) => {
   if (seckill.enable)
     return res.json(util.reply(4507, '该秒杀已启用'));
   const countdown = seckill.startAt - Date.now();
-  if (countdown < config.seckill.allowLoginLeft)
+  if (countdown < config.seckill.allowLoginLeft && process.env == 'production')
     return res.json(util.reply(4506, '请将秒杀启用时间设置为至少' + (config.seckill.allowLoginLeft / 1000 / 60) + '分钟以后'));
 
   seckill.enable = true;
@@ -144,7 +144,7 @@ router.get('/:seckillid/awardlist', getSeckillById, (req, res, next) => {
 
   const countdown = seckill.startAt - Date.now();
   if (countdown > -config.seckill.downloadAwardlist)
-    return res.json(util.reply(4602, '请在秒杀活动开始20分钟后再获取获奖列表'));
+    return res.json(util.reply(4602, '请在秒杀活动开始' + (config.seckill.downloadAwardlist / 1000 / 60) + '分钟后再获取获奖列表'));
 
   const consequnce = [];
   consequnce.push(['用户id', '学工号', '姓名', '奖品id', '奖品名称', '奖品描述']);

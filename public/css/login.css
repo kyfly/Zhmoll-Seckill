@@ -109,13 +109,16 @@ body>div{
 	font-size: 15px;
 }
 .rest  span{
-	color:#f75757
+	color:#f75757;
 }
 .total span{
 	color:#f75757
 }
 .pcount span{
 	color:#f75757
+}
+.pcount{
+	margin-top:140px
 }
 .m-form .login{
 	width: 70px;
@@ -135,6 +138,7 @@ body>div{
 	color:  rgb(187, 111, 122);
 }
 
+
 .g-mid .m-ticket{
 	margin-top:22px;
 	/* display: none; */
@@ -143,7 +147,7 @@ body>div{
 .m-ticket .grab{
 	width: 76px;
 	height: 76px;
-	margin-top: 230px;
+	margin-top: 140px;
 	font-weight: bold;
 	color: #f9a1bc; 
 	background-color: rgba(238, 238, 238, 0.83);
@@ -264,9 +268,51 @@ ul.countdown li p {
 	 background: url('../img/bg-mo.jpg') 0 0/cover no-repeat;
 	}	
 	ul.countdown li.seperator{
-		font-size: 60px;
+		font-size: 54px;
+		color:#c9cad0
 	}
 	ul.countdown li span{
-		font-size: 60px;
+		font-size: 54px;	
+	}
+	ul.countdown{
+		margin-top:-18px;
+	}
+	ul.countdown span{
+		color:rgba(108, 138, 162, 0.83)
+	}
+	.invite__form{
+		background-color: rgba(119, 119, 119, 0.43);
+
+	}
+	.CenteredPage__field input{
+		background-color:rgba(119, 119, 119, 0.41);
+	}
+	.btn-raised.btn-primary{
+		background-color:rgba(27, 38, 65, 0.73)
+	}
+	.pcount,.rest,.total{
+		text-align: left;
+	}
+	.pcount span,.rest span,.total span{
+		color:#c9cad0
+	}	
+	.m-ticket .grab{
+		margin-top: 100px
+	}
+	.pcount{
+		margin-top:160px;
+	}
+	.m-ticket{
+		padding: 0px 20px;
+	}
+	.m-ticket .total,.m-ticket .rest ,.m-ticket .pcount{
+		color:rgba(100, 129, 153, 0.84)
+	}
+	.m-ticket .grab{
+		color:#5c768e;
+		border:1px solid #5c768e
+	}
+	.g-mid .m-title{
+		color:rgba(196, 199, 182, 0.5)
 	}
 }
