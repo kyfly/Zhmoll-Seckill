@@ -1,147 +1,176 @@
-var socket = io('/seckill', {
-    reconnectionAttempts: 3,
-    autoConnect: false
-});
-var severRequest;
-var countDown = 0;
-// socket.on('message', function (data) {
-//     if (data.t) {
-//         countDown = data.t - Date.now();
-//         console.log('set countDown='+countDown)
-//     }
+// global
+var socket;
+var clickCount = 8;
+var countDown = 0; // 服务器与本地的时间差
+var serverStart = 0; // 服务器活动开始时间
+setInterval(function () { clickCount = 8; }, 1000);
 
-// });
-var clickCount = 9; //前端限制每1秒次数
-setInterval(function () {
-    clickCount = 9;
-}, 1000);
 var vm = new Vue({
     el: "#app",
     data: {
-        ok: false,
-        stu: {
-            id: '',
-            name: ''
+        seckillid: '',
+        // 以下是打开页面获取的信息
+        gotSeckill: false,
+        seckill: {
+            title: '团团一家秒杀活动',
+            description: '',
+            startAt: '',
+            logoUrl: '',
+            content: [],
+            totalAwardCount: 0
         },
-        online: 10,
-        total: 0,
-        rest: 50,
-        token: '',
-        seckillid: '58f4083fced53c3746c7d32c',
-        start: '',
-        countDown: 0
+        // 以下是登录需要的信息
+        field_uid: localStorage.uid || "",
+        field_name: localStorage.name || "",
+        // 以下是登录后的信息
+        isLogin: false,
+        online_count: 0,
+        rest_count: 0,
+        log_box: localStorage.info_box && JSON.parse(localStorage.info_box) || []
     },
-    mounted: function () {
-        axios.get('/api/seckill/' + this.seckillid).then(function (response) {
-            serverRequest = response.data;
-            console.log(serverRequest)
-            var flag=0;
-            serverRequest.body.content.forEach(item=>{flag+=item.limit});
-            console.log('flag is'+flag)
-            vm.total=flag;
-        }).catch(function (error) {
-            console.log(error)
-        })
-        socket.on('connect', this.connect);
-        socket.on('succeed', this.succeed);
-        socket.on('failure', this.failure);
-        socket.on('message', this.message);
-        // this.socket.on('disconnect',this.disconnect);
-        // this.socket.on('failure',this.failure);
+    mounted: function initWhenMounted() {
+        // 0、初始化控件
+        toastr.options.newestOnTop = false;
+        toastr.options.timeOut = 20;
+        var seckillid = window.location.pathname.split('/')[2];
+        // 1、获取seckillid
+        this.seckillid = seckillid;
+        // 2、拿缓存数据
+        if (localStorage[seckillid]) {
+            var seckill_in_cache = JSON.parse(localStorage[seckillid]);
+            initContent(this.seckill, seckill_in_cache);
+        }
+        // 3、发起请求
+        axios.get('/api/seckill/' + seckillid)
+            .then(function (res) {
+                // 3、拿到数据
+                var data = res.data;
+                if (data.code != 4101)
+                    throw new Error('获取秒杀活动失败');
+                initContent(vm.seckill, data.body);
+                // 4、标记拿到数据
+                vm.gotSeckill = true;
+                // 5、缓存数据
+                localStorage[seckillid] = null;
+                localStorage[seckillid] = JSON.stringify(vm.seckill);
+            }).catch(function (error) {
+                emitToastr(error.message, 'error');
+            });
     },
     methods: {
-        connect: function () {
-            socket.emit('auth', { seckillid: this.seckillid, token: this.token });
-            console.log(1)
-            toastr.success('登陆成功')
-            setInterval(function () {
-                count = 9;
-            }, 1000);
-        },
-        succeed: function () {
-            toastr.success('恭喜你抢到票啦!!!')
-        },
-        message: function (data) {
-            console.log(data)
-            if (data.t) {
-                this.countDown = data.t - Date.now();
-                console.log('set countDown=' + countDown)
-            }
-            if (data.e) {
-                toastr.error(data.e)
-            }
-            if (data.r) {
-                this.rest = data.r;
-            }
-            if (data.h) {
-                this.online = data.h
-            }
-            if (data.m) {
-                toastr.error(data.m)
-            }
-        },
-        failure: function (result) {
-            switch (result) {
-                case 'notyet':
-                    toastr.warning('还没开始!!!')
-                    break;
-                case 'awarded':
-                    toastr.warning('你已经抢过票了!')
-                    break;
-                case 'finished':
-                    toastr.warning('票已经被抢完啦!')
-                    break;
-                case 'again':
-                    toastr.warning('差一点点就抢到啦!再继续试试!')
-                    break;
-            }
-        },
-        login: function () {
-            axios.post('/api/seckill/' + this.seckillid + '/join',
-                // {uid:this.stu.id,
-                // name:this.stu.name}
-                {
-                    uid: '14051534',
-                    name: '张效伟'
-                }
-            ).then(function (response) {
-                var loginCode = response.data.code;
-                if (loginCode == 4000) {
-                    console.log(0)
-                    vm.token = response.data.body.token;
-                    console.log(vm.token)
-                    socket.open();
-                    vm.ok = true;
-                } else if (loginCode == 4001) {
-                    toastr.error('登录失败,请检查你的学号／工号是否正确。')
-                } else if (loginCode == 4002) {
-                    toastr.error('登陆失败,请核对你的姓名与学号／工号。')
-                } else if (loginCode == 4003) {
-                    toastr.error('登陆失败,请在活动开始前30分钟内加入。')
-                } else if (loginCode == 4004) {
-                    toastr.error('登陆失败,本次活动已经结束。')
-                } else {
-                    toastr.error('登陆失败。')
-                }
-            })
-                .catch(function (error) {
-                    console.log(error)
-                    toastr.success('登陆失败')
+        login: function login_btn() {
+            var seckillid = this.seckillid;
+            localStorage.uid = this.field_uid;
+            localStorage.name = this.field_name;
+            axios
+                .post('/api/seckill/' + seckillid + '/join', { uid: this.field_uid, name: this.field_name })
+                .then(function (res) {
+                    var data = res.data;
+                    var retcode = data.code;
+                    switch (retcode) {
+                        case 4000: login_succeed(data.body.token); break;
+                        case 4001: emitToastr('登录失败，学号／工号不存在。', 'error'); break;
+                        case 4002: emitToastr('登录失败，请核对学号／工号与姓名是否匹配。', 'error'); break;
+                        case 4003: emitToastr('登录失败，请在活动开始前30分钟内再来登录。', 'error'); break;
+                        case 4004: emitToastr('登录失败，本次活动已经结束。', 'error'); break;
+                        case 4102: emitToastr('登录失败，找不到该秒杀活动。', 'error'); break;
+                        default: emitToastr('登录失败', 'error'); break;
+                    }
                 })
+                .catch(function (error) {
+                    console.error(error);
+                });
         },
-        kill: function () {
+        kill: function kill_btn() {
             var serverTime = Date.now() + countDown;
-            var serverStart = (new Date(serverRequest.body.startAt)).getTime();
+            if (serverStart === 0) return;
             if (serverTime - serverStart > -1000) {
                 if (clickCount > 0) {
-                    console.log(1);
                     clickCount--;
-                    socket.emit('submitkill');
+                    for (let i = 0; i < 5; i++)
+                        socket.emit('submitkill');
                 }
-            } else {
-                toastr.warning('抢票还未开始')
+                return;
             }
+            emitToastr('秒杀还没开始!');
         }
     }
-})
+});
 
+function initContent(target, source) {
+    target.title = source.title;
+    target.startAt = source.startAt;
+    target.logoUrl = source.logoUrl;
+    target.description = source.description;
+    target.totalAwardCount = 0;
+    target.content.splice(0, target.content.length);
+    source.content.forEach(function (item) {
+        target.content.push(item);
+        target.totalAwardCount += item.limit;
+    });
+}
+
+function initCountdown(date) {
+    $('.countdown').downCount({
+        date: date,
+        offset: +8
+    }, function () {
+
+    });
+}
+
+function login_succeed(token) {
+    vm.token = token;
+    socket = (function () {
+        var socket = io('/seckill', {
+            reconnectionAttempts: 1,
+            autoConnect: false,
+            query: 'seckillid=' + vm.seckillid + '&token=' + vm.token
+        });
+        socket.on('connect', function () {
+            vm.isLogin = true;
+            emitToastr('登陆成功', 'success');
+        });
+        socket.on('succeed', function (name) {
+            emitToastr('恭喜你抢到[' + name + ']啦!', 'success');
+        });
+        socket.on('failure', function (msg) {
+            switch (msg) {
+                case 'notyet': emitToastr('秒杀还没开始!'); break;
+                case 'awarded': emitToastr('你已经抢过票了!'); break;
+                case 'finished': emitToastr('票已经被抢完啦!'); break;
+                case 'again': emitToastr('差一点点就抢到啦!再继续试试!'); break;
+            }
+        });
+        socket.on('message', function (data) {
+            if (data.t) {
+                // 校准服务器与本地时间差
+                countDown = data.t - Date.now();
+                serverStart = (new Date(vm.seckill.startAt)).getTime();
+                initCountdown(vm.seckill.startAt);
+            }
+            if (data.e) emitToastr(data.e, 'error');
+            if (data.r) vm.rest_count = data.r;
+            if (data.h) vm.online_count = data.h;
+            if (data.m) emitToastr(data.m);
+        });
+        socket.on('disconnect', function () {
+            vm.isLogin = false;
+            emitToastr('与服务器连接中断');
+        });
+        socket.on('connect_error', function (data) {
+            emitToastr('服务器拒绝连接', 'error');
+        });
+        socket.open();
+        return socket;
+    })();
+}
+
+function emitToastr(msg, type) {
+    type = type || 'info';
+    toastr[type](msg);
+    const item = { time: new Date(), seckillid: vm.seckillid, token: vm.token, message: msg, type: type };
+    vm.log_box.unshift(item);
+    localStorage.log_box = JSON.stringify(vm.log_box);
+    console.log(JSON.stringify(item));
+}

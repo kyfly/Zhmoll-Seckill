@@ -29,7 +29,7 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: 'Microsoft Yahei', '微软雅黑', 'Simsun', '宋体', 'Arial';
 }
 p, span, a{
-	color: #d8173b;
+	color:rgba(140, 80, 92, 0.8);
 	font-family: 'Microsoft Yahei', '微软雅黑', 'Simsun', '宋体', 'Arial';
 }
 em, i {
@@ -80,7 +80,7 @@ body>div{
 	text-align: center;
 	margin: 40px 0 20px 0;
 	font-size: 38px;
-	color: rgba(211, 170, 118, 0.84);
+	color: rgb(156, 156, 154);
 }
 
 .g-mid #m-time{
@@ -108,7 +108,15 @@ body>div{
 	background-color: transparent;
 	font-size: 15px;
 }
-
+.rest  span{
+	color:#f75757
+}
+.total span{
+	color:#f75757
+}
+.pcount span{
+	color:#f75757
+}
 .m-form .login{
 	width: 70px;
 	text-align: center;	
@@ -124,11 +132,11 @@ body>div{
 .m-ticket .total,.m-ticket .rest ,.m-ticket .pcount{
 	line-height: 1.5;
 	font-size: 20px;
-	color:  rgb(221, 56, 111);
+	color:  rgb(187, 111, 122);
 }
 
 .g-mid .m-ticket{
-	margin-top:138px;
+	margin-top:22px;
 	/* display: none; */
 }
 
@@ -173,11 +181,11 @@ body>div{
 	height: 40px;
 	color: white;
 	border: 0;
-	border-bottom: 1px solid #ddd;
-	background-color: rgba(158, 177, 197, 0.42);
+	background-color: rgba(252, 248, 227, 0.57);
 }
 .btn-raised.btn-primary {
 	background-color:rgba(150, 151, 152, 0.82);
+	font-size:18px
 }
 .CenteredPage__field .btn-raised {
 	width: 100%;
@@ -214,10 +222,31 @@ body>div{
 	-ms-user-select: none;
 	user-select: none;
 }
-#main{
-	display: none
+/*计时器*/
+ul.countdown {
+	list-style: none;
+	margin: 18px 0;
+	padding: 0;
+	display: block;
+	text-align: center;
 }
-
+ul.countdown li {
+	display: inline-block;
+}
+ul.countdown li span {
+	font-size: 72px;
+	font-weight: 300;
+	line-height: 80px;
+}
+ul.countdown li.seperator {
+	font-size: 72px;
+	line-height: 70px;
+	vertical-align: top;
+}
+ul.countdown li p {
+	color: rgba(140, 80, 92, 0.8);
+	font-size: 14px;
+}
 /* 中等屏幕（大于等于 992px） */
 @media screen and (min-width: 992px) {
 	.g-mid .m-title{
@@ -234,4 +263,10 @@ body>div{
 	body{
 	 background: url('../img/bg-mo.jpg') 0 0/cover no-repeat;
 	}	
+	ul.countdown li.seperator{
+		font-size: 60px;
+	}
+	ul.countdown li span{
+		font-size: 60px;
+	}
 }

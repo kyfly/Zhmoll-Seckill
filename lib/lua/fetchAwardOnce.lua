@@ -1,8 +1,13 @@
 -- KEYS[1] 获奖列表 Seckill_AwardList#[_seckillid_]  hash
 -- KEYS[2] 奖品池 Seckill_AwardPool#[_seckillid_]    list
+-- KEYS[3] 黑名单　Seckill_BlackRoom#[_seckillid_]   hash
 -- ARGV[1] 用户token 
 -- ARGV[2] 随机数 
 
+if redis.call("HEXISTS",KEYS[3],ARGV[1]) == 1 then
+-- 作弊被加入黑名单
+　return 20
+end
 if redis.call("HEXISTS",KEYS[1],ARGV[1]) == 1 then
 -- 已拿到奖品，就直接返回
   return 11
