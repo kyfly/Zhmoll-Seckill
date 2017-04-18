@@ -1,4 +1,6 @@
-const router = require('express').Router();
+'use strict';
+const express = require('express');
+const router = express.Router();
 const User = require('../models/users');
 const Seckill = require('../models/seckills');
 const Token = require('../models/tokens');

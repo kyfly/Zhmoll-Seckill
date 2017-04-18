@@ -8,6 +8,7 @@ function unauthorized(res) {
 }
 
 function auth(req, res, next) {
+  // return next();
   const user = basicAuth(req);
   if (!user || !user.name || !user.pass) {
     return unauthorized(res);

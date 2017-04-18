@@ -8,7 +8,7 @@ setInterval(function () { clickCount = 8; }, 1000);
 var vm = new Vue({
     el: "#app",
     data: {
-        seckillid: '58f44b33c54f53410ad8b3b3',
+        seckillid: '',
         // 以下是打开页面获取的信息
         gotSeckill: false,
         seckill: {
@@ -32,8 +32,9 @@ var vm = new Vue({
         // 0、初始化控件
         toastr.options.newestOnTop = false;
         toastr.options.timeOut = 20;
+        var seckillid = window.location.pathname.split('/')[2];
         // 1、获取seckillid
-        var seckillid = this.seckillid;
+        this.seckillid = seckillid;
         // 2、拿缓存数据
         if (localStorage[seckillid]) {
             var seckill_in_cache = JSON.parse(localStorage[seckillid]);
@@ -77,7 +78,7 @@ var vm = new Vue({
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.error(error);
                 });
         },
         kill: function kill_btn() {
