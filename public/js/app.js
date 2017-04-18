@@ -47,7 +47,6 @@ var vm = new Vue({
                 if (data.code != 4101)
                     throw new Error('获取秒杀活动失败');
                 initContent(vm.seckill, data.body);
-
                 // 4、标记拿到数据
                 vm.gotSeckill = true;
                 // 5、缓存数据
@@ -115,7 +114,7 @@ function initCountdown(date) {
         date: date,
         offset: +8
     }, function () {
-        
+
     });
 }
 
@@ -147,7 +146,6 @@ function login_succeed(token) {
                 // 校准服务器与本地时间差
                 countDown = data.t - Date.now();
                 serverStart = (new Date(vm.seckill.startAt)).getTime();
-                // abc
                 initCountdown(vm.seckill.startAt);
             }
             if (data.e) emitToastr(data.e, 'error');

@@ -80,7 +80,7 @@ body>div{
 	text-align: center;
 	margin: 40px 0 20px 0;
 	font-size: 38px;
-	color: rgba(211, 170, 118, 0.84);
+	color: rgb(156, 156, 154);
 }
 
 .g-mid #m-time{
@@ -181,11 +181,11 @@ body>div{
 	height: 40px;
 	color: white;
 	border: 0;
-	border-bottom: 1px solid #ddd;
-	background-color: rgba(158, 177, 197, 0.42);
+	background-color: rgba(252, 248, 227, 0.57);
 }
 .btn-raised.btn-primary {
 	background-color:rgba(150, 151, 152, 0.82);
+	font-size:18px
 }
 .CenteredPage__field .btn-raised {
 	width: 100%;
