@@ -201,9 +201,9 @@ router.get('/:seckillid/awardlist', getSeckillById, (req, res, next) => {
     .then(() => {
       // 构造获奖xlsx文件
       const buffer = xlsx.build([
-        { name: seckill.title + '_获奖名单', data: consequnce },
-        { name: seckill.title + '_作弊名单', data: blackroom },
-        { name: seckill.title + '_数据统计', data: analysis },
+        { name: '获奖名单', data: consequnce },
+        { name: '作弊名单', data: blackroom },
+        { name: '数据统计', data: analysis },
       ]);
       const filename = seckill.title + '_结果.xlsx';
       res.setHeader('Content-Type', 'application/octet-stream');
