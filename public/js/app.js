@@ -138,6 +138,8 @@ function login_succeed(token) {
         });
         socket.on('succeed', function (name) {
             emitToastr('恭喜你抢到[' + name + ']啦!', 'success');
+            // 伪实时余量处理
+            if (vm.rest_count > 0) vm.rest_count--;
         });
         socket.on('failure', function (msg) {
             switch (msg) {
