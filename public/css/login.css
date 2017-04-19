@@ -187,6 +187,7 @@ body>div{
 	color: white;
 	border: 0;
 	background-color: rgba(252, 248, 227, 0.57);
+	padding: 10px
 }
 .btn-raised.btn-primary {
 	background-color:rgba(150, 151, 152, 0.82);
@@ -295,7 +296,8 @@ button{
 	}
 	.invite__form{
 		background-color: rgba(119, 119, 119, 0.43);
-		margin:180px auto;
+		/*margin:180px auto;*/
+		margin:58% auto;
 		padding:20px;
 		max-width: 300px
 	}
