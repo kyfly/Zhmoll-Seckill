@@ -229,6 +229,11 @@ body>div{
 	-ms-user-select: none;
 	user-select: none;
 }
+.po-login{
+		margin:160px auto;
+		width:100%;
+		position:fixed
+	}
 /*计时器*/
 ul.countdown {
 	list-style: none;
@@ -327,5 +332,10 @@ button{
 	}
 	.g-mid .m-title{
 		color:rgba(196, 199, 182, 0.5)
+	}
+	.po-login{
+		margin:0;
+		width:100%;
+		position:fixed
 	}
 }
