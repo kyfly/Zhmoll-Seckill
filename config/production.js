@@ -4,7 +4,7 @@ module.exports = {
     url: 'mongodb://seckill:seckill-zhmoll@localhost/seckill-beta'
   },
   websocket: {
-    serveClient: true
+    serveClient: false
   },
   seckill: {
     checkLimit: 18,
