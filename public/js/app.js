@@ -1,10 +1,8 @@
-// global
 var socket;
-var clickCount = 7;
 var countDown = 0; // 服务器与本地的时间差
 var serverStart = 0; // 服务器活动开始时间
 var login_click_mutex = false; // 登录按钮互斥锁
-setInterval(function () { clickCount = 7; }, 1000);
+var lastCommit = Date.now();
 
 var vm = new Vue({
     el: "#app",
@@ -21,8 +19,8 @@ var vm = new Vue({
             totalAwardCount: 0
         },
         // 以下是登录需要的信息
-        field_uid: localStorage.uid || "",
-        field_name: localStorage.name || "",
+        field_uid: localStorage.uid || '',
+        field_name: localStorage.name || '',
         // 以下是登录后的信息
         isLogin: false,
         online_count: 0,
@@ -89,12 +87,13 @@ var vm = new Vue({
                 });
         },
         kill: function kill_btn() {
-            var serverTime = Date.now() + countDown;
+            var now = Date.now();
+            var serverTime = now + countDown;
             if (serverStart === 0) return;
             if (serverTime - serverStart > -1000) {
-                if (clickCount > 0) {
-                    clickCount--;
+                if (now - lastCommit > 140) {
                     socket.emit('submitkill');
+                    lastCommit = now;
                 }
                 return;
             }
@@ -136,20 +135,19 @@ function login_succeed(token) {
         socket.on('connect', function () {
             vm.isLogin = true;
             emitToastr('登陆成功', 'success');
-            if (localStorage[vm.seckillid].awardname && localStorage[vm.seckillid].awardname != '')
-                vm.awardname = localStorage[vm.seckillid].awardname;
+            if (localStorage[vm.seckillid + vm.field_uid] && localStorage[vm.seckillid + vm.field_uid] != '')
+                vm.awardname = localStorage[vm.seckillid + vm.field_uid];
         });
         socket.on('succeed', function (name) {
             emitToastr('恭喜你抢到[' + name + ']啦!', 'success');
-            vm.awardname = name;
-            localStorage[vm.seckillid].awardname = name;
+            localStorage[vm.seckillid + vm.field_uid] = vm.awardname = name;
             // 伪实时余量处理
             if (vm.rest_count > 0) vm.rest_count--;
         });
         socket.on('failure', function (msg) {
             switch (msg) {
                 case 'notyet': emitToastr('秒杀还没开始!'); break;
-                case 'awarded': emitToastr('你已经抢过票了!'); break;
+                case 'awarded': emitToastr('你已经抢到[' + vm.awardname + ']了!'); break;
                 case 'finished': emitToastr('票已经被抢完啦!'); break;
                 case 'again': emitToastr('差一点点就抢到啦!再继续试试!'); break;
             }

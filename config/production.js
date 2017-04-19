@@ -1,5 +1,5 @@
 module.exports = {
-  port: 3030,
+  port: 80,
   mongodb: {
     url: 'mongodb://seckill:seckill-zhmoll@localhost/seckill-beta'
   },
