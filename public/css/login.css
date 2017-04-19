@@ -320,7 +320,7 @@ button{
 		margin-top:160px;
 	}
 	.m-ticket{
-		padding: 68px 20px;
+		padding: 9% 20px;
 	}
 	.m-ticket .total,.m-ticket .rest ,.m-ticket .pcount{
 		color:rgba(100, 129, 153, 0.84)
@@ -331,7 +331,7 @@ button{
 		margin-top:-20px
 	}
 	.g-mid .m-ticket{
-		margin:20px
+		margin:13%
 	}
 	.g-mid .m-title{
 		color:rgba(196, 199, 182, 0.5)
