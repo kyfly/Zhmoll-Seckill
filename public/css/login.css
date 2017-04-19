@@ -336,6 +336,7 @@ button{
 	.po-login{
 		margin:0;
 		width:100%;
-		position:fixed
+		height:100%;
+		position:fixed;
 	}
 }
