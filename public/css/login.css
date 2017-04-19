@@ -286,7 +286,7 @@ button{
 		color:#c9cad0
 	}
 	ul.countdown li span{
-		font-size: 54px;	
+		font-size: 42px;	
 	}
 	ul.countdown{
 		margin-top:-18px;
@@ -328,7 +328,7 @@ button{
 	.m-ticket .grab{
 		color:#5c768e;
 		border:1px solid #5c768e;
-		margin-top:-10px
+		margin-top:-20px
 	}
 	.g-mid .m-ticket{
 		margin:20px

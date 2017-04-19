@@ -24,7 +24,7 @@ var vm = new Vue({
         field_uid: localStorage.uid || "",
         field_name: localStorage.name || "",
         // 以下是登录后的信息
-        isLogin: false,
+        isLogin: true,
         online_count: 0,
         rest_count: 0,
         log_box: localStorage.info_box && JSON.parse(localStorage.info_box) || []
