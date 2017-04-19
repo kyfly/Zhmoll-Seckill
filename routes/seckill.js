@@ -29,7 +29,7 @@ function getSeckillById(req, res, next) {
     .findOne({ _id: seckillid, enable: true, isDeleted: false })
     .select('-isDeleted -enable')
     .exec((err, seckill) => {
-      if (err) res.json(util.reply(err));
+      if (err) return res.json(util.reply(err));
       if (!seckill)
         return res.json(util.reply(4102, '找不到该秒杀活动'));
       req.seckill = seckill;
