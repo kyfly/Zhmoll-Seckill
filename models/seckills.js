@@ -4,12 +4,13 @@ const Schema = mongoose.Schema;
 const SeckillSchema = new Schema({
   title: { type: String, required: true },
   logoUrl: { type: String },
-  description: { type: String, default: '比比谁的手速快！' },
+  description: { type: String },
   detail: { type: String },
   createdAt: { type: Date },
   startAt: { type: Date },
   content: [{ name: String, description: String, limit: Number }],
   enable: { type: Boolean, default: false },
+  isShowed: { type: Boolean, default: true },
   isDeleted: { type: Boolean, default: false },
   consequence: {
     finishTime: Date,

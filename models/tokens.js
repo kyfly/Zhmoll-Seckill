@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 const config = require('config-lite');
 
 const tokenSchema = new Schema({
-  token: { type: String },
-  userid: { type: Schema.ObjectId, ref: 'User' },
-  seckillid: { type: Schema.ObjectId, ref: 'Seckill' },
+  token: { type: String, index: true },
+  userid: { type: Schema.ObjectId, ref: 'User', index: true },
+  seckillid: { type: Schema.ObjectId, ref: 'Seckill', index: true },
   content: { name: String, description: String, id: String },
   createdAt: { type: Date, default: Date.now() },//, expires: '3h' }
   blocked: { type: Boolean, default: false },
