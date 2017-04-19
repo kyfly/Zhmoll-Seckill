@@ -27,6 +27,7 @@ var vm = new Vue({
         isLogin: false,
         online_count: 0,
         rest_count: 0,
+        awardname: '',
         log_box: localStorage.info_box && JSON.parse(localStorage.info_box) || []
     },
     mounted: function initWhenMounted() {
@@ -135,9 +136,13 @@ function login_succeed(token) {
         socket.on('connect', function () {
             vm.isLogin = true;
             emitToastr('登陆成功', 'success');
+            if (localStorage[vm.seckillid].awardname && localStorage[vm.seckillid].awardname != '')
+                vm.awardname = localStorage[vm.seckillid].awardname;
         });
         socket.on('succeed', function (name) {
             emitToastr('恭喜你抢到[' + name + ']啦!', 'success');
+            vm.awardname = name;
+            localStorage[vm.seckillid].awardname = name;
             // 伪实时余量处理
             if (vm.rest_count > 0) vm.rest_count--;
         });

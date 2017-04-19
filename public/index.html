@@ -15,7 +15,6 @@
         <div class="g-mid container-fluid">
             <!-- 尚未登录 -->
             <div class="row" v-if="isLogin==false">
-                <!--<h1 class="m-title" v-text="seckill.title"></h1>-->
                 <div class="po-login">
                     <div class="invite__form">
                         <input type="hidden" name="_token" value="">
@@ -36,16 +35,6 @@
             <!-- 登录后 -->
             <div class="row" v-if="isLogin==true">
                 <div class="m-ticket">
-                    <!--<ul class="countdown">
-                        <li> <span class="hours">00</span>
-                        </li>
-                        <li class="seperator">:</li>
-                        <li> <span class="minutes">00</span>
-                        </li>
-                        <li class="seperator">:</li>
-                        <li> <span class="seconds">00</span>
-                        </li>
-                    </ul>-->
                     <p class="pcount">在线 : <span v-text="online_count"></span></p>
                     <p class="total">总数 : <span v-text="seckill.totalAwardCount"></span></p>
                     <p class="rest">余量 : <span v-text="rest_count"></span></p>
