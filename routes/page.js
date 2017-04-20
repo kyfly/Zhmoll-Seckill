@@ -10,7 +10,7 @@ function getSeckillById(req, res, next) {
   Seckill
     .findById(seckillid)
     .exec((err, seckill) => {
-      if (err || !seckill || seckill.isHidden || !seckill.enable || seckill.isDeleted)
+      if (err || !seckill || !seckill.enable || seckill.isDeleted)
         return res.status(404).end();
       next();
     });
