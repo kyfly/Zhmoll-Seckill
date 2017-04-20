@@ -1,3 +1,4 @@
+'use strict';
 const redis = require('../lib/redis');
 
 module.exports = function (app) {

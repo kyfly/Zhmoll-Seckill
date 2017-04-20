@@ -12,26 +12,26 @@ const redis = require('../lib/redis');
 // get /api/seckill
 router.get('/', (req, res, next) => {
   Seckill
-    .find({ enable: true, isDeleted: false })
+    .find({ enable: true, isDeleted: false, isHidden: false })
     .limit(20)
     .select('id title logoUrl description startAt')
-    .sort('-startAt')
+    .sort('startAt')
     .exec((err, seckills) => {
-      if (err) res.json(util.reply(err));
+      if (err) return next(err);
       return res.json(util.reply(4100, '获取首页成功', seckills));
     });
 });
 
 function getSeckillById(req, res, next) {
   const seckillid = req.params.seckillid;
-
   Seckill
-    .findOne({ _id: seckillid, enable: true, isDeleted: false })
-    .select('-isDeleted -enable')
+    .findById(seckillid)
+    .where('isDeleted').equals(false)
+    .where('enable').equals(true)
+    .select('-isDeleted -enable -consequence')
     .exec((err, seckill) => {
-      if (err) return res.json(util.reply(err));
-      if (!seckill)
-        return res.json(util.reply(4102, '找不到该秒杀活动'));
+      if (err) return next(err);
+      if (!seckill) return res.json(util.reply(4102, '找不到该秒杀活动'));
       req.seckill = seckill;
       next();
     });
@@ -62,10 +62,10 @@ router.post('/:seckillid/join', getSeckillById, (req, res, next) => {
       throw util.standardError(4002, '学号/工号与姓名不匹配！');
 
     // 3、检查时间是否符合要求
-    const countdown = seckill.startAt.getTime() - Date.now();
-    if (countdown > config.seckill.allowLoginLeft)
-      throw util.standardError(4003, '请在活动开始前' + (config.seckill.allowLoginLeft / 1000 / 60) + '分钟内加入');
-    else if (countdown < -config.seckill.allowLoginRight)
+    const time_difference = seckill.startAt.getTime() - Date.now();
+    if (time_difference > config.seckill.login_start)
+      throw util.standardError(4003, '请在活动开始前' + (config.seckill.login_start / 1000 / 60) + '分钟内加入');
+    else if (time_difference < -config.seckill.login_end)
       throw util.standardError(4004, '活动已结束');
 
     // 4、查找是否已经有token有就直接返回

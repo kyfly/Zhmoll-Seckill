@@ -7,12 +7,13 @@ module.exports = {
     serveClient: false
   },
   seckill: {
-    checkLimit: 18,
-    checkTime: 2000,
-    allowLoginLeft: 30 * 60 * 1000,
-    allowLoginRight: 10 * 60 * 1000,
-    cachePreserveLimit: 16 * 60 * 1000,    // 最长秒杀开始后多少毫秒内cache断开引用
-    persistAfterStart: 12 * 60 * 1000,
-    downloadAwardlist: 15 * 60 * 1000
+    kill_ahead_time: 4444,
+    limit_rate: 9,
+    limit_time: 1000,
+    login_start: 30 * 60 * 1000,
+    login_end: 500 * 60 * 1000,
+    finish_time: 600 * 60 * 1000,
+    refresh_data_rate: 1500,             // 刷新数据频率
+    download_award_list: 6 * 60 * 1000
   }
 };

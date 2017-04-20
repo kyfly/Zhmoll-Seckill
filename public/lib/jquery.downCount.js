@@ -99,6 +99,7 @@
         };
         
         // start
+        clearInterval(interval);
         var interval = setInterval(countdown, 333);
     };
 

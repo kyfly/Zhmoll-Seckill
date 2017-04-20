@@ -7,7 +7,7 @@ const tokenSchema = new Schema({
   userid: { type: Schema.ObjectId, ref: 'User', index: true },
   seckillid: { type: Schema.ObjectId, ref: 'Seckill', index: true },
   content: { name: String, description: String, id: String },
-  createdAt: { type: Date, default: Date.now() },//, expires: '3h' }
+  createdAt: { type: Date, default: Date.now() },
   blocked: { type: Boolean, default: false },
   blockReason: { type: String }
 }, { versionKey: false });

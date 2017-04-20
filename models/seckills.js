@@ -10,7 +10,7 @@ const SeckillSchema = new Schema({
   startAt: { type: Date },
   content: [{ name: String, description: String, limit: Number }],
   enable: { type: Boolean, default: false },
-  isShowed: { type: Boolean, default: true },
+  isHidden: { type: Boolean, default: false },
   isDeleted: { type: Boolean, default: false },
   consequence: {
     finishTime: Date,
@@ -18,7 +18,8 @@ const SeckillSchema = new Schema({
     attendCount: Number,
     connectCount: Number,
     loginCount: Number,
-    turnBackCount: Number
+    turnBackCount: Number,
+    maxOnline: Number
   }
 }, { versionKey: false });
 

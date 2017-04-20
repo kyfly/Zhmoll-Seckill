@@ -10,10 +10,5 @@ const UserSchema = new Schema({
   name: Schema.Types.String,
 }, { versionKey: false });
 
-// 用户
-// id: ObjectId
-// uid: 学工号
-// name: 姓名
-
 const User = mongoose.model('User', UserSchema);
 module.exports = User;

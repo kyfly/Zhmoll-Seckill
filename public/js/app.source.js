@@ -1,8 +1,8 @@
 var socket;
-var countDown = 0; // 服务器与本地的时间差
+var time_difference; // 服务器与本地的时间差
 var serverStart = 0; // 服务器活动开始时间
 var login_click_mutex = false; // 登录按钮互斥锁
-var lastCommit = Date.now();
+var countdown_timer;
 
 var vm = new Vue({
     el: "#app",
@@ -26,6 +26,7 @@ var vm = new Vue({
         online_count: 0,
         rest_count: 0,
         awardname: '',
+        lastCommit: Date.now(),
         log_box: localStorage.info_box && JSON.parse(localStorage.info_box) || []
     },
     mounted: function initWhenMounted() {
@@ -47,6 +48,7 @@ var vm = new Vue({
                 var data = res.data;
                 if (data.code != 4101) throw new Error('获取秒杀活动失败');
                 initContent(vm.seckill, data.body);
+                serverStart = (new Date(vm.seckill.startAt)).getTime();
                 // 4、标记拿到数据
                 vm.gotSeckill = true;
                 // 5、缓存数据
@@ -88,12 +90,13 @@ var vm = new Vue({
         },
         kill: function kill_btn() {
             var now = Date.now();
-            var serverTime = now + countDown;
+            var serverTime = now + time_difference;
             if (serverStart === 0) return;
             if (serverTime - serverStart > -1000) {
-                if (now - lastCommit > 140) {
+                if (now - vm.lastCommit > 140) {
+                    // for(let i = 0 ; i <80;i++)
                     socket.emit('submitkill');
-                    lastCommit = now;
+                    vm.lastCommit = now;
                 }
                 return;
             }
@@ -116,12 +119,43 @@ function initContent(target, source) {
 }
 
 function initCountdown(date) {
-    $('.countdown').downCount({
-        date: date,
-        offset: +8
-    }, function () {
-
-    });
+    if (countdown_timer) {
+        clearInterval(countdown_timer);
+    }
+    countdown_timer = setInterval(function () {
+        var target_date = new Date(date),
+            current_date = new Date();
+        var difference = target_date - current_date;
+        if (difference < 0) {
+            clearInterval(countdown_timer);
+            return;
+        }
+        var _second = 1000,
+            _minute = _second * 60,
+            _hour = _minute * 60,
+            _day = _hour * 24;
+        var days = Math.floor(difference / _day),
+            hours = Math.floor((difference % _day) / _hour),
+            minutes = Math.floor((difference % _hour) / _minute),
+            seconds = Math.floor((difference % _minute) / _second);
+        days = (String(days).length >= 2) ? days : '0' + days;
+        hours = (String(hours).length >= 2) ? hours : '0' + hours;
+        minutes = (String(minutes).length >= 2) ? minutes : '0' + minutes;
+        seconds = (String(seconds).length >= 2) ? seconds : '0' + seconds;
+        var ref_days = (days === 1) ? 'day' : 'days',
+            ref_hours = (hours === 1) ? 'hour' : 'hours',
+            ref_minutes = (minutes === 1) ? 'minute' : 'minutes',
+            ref_seconds = (seconds === 1) ? 'second' : 'seconds';
+        var container = $('.countdown');
+        container.find('.days').text(days);
+        container.find('.hours').text(hours);
+        container.find('.minutes').text(minutes);
+        container.find('.seconds').text(seconds);
+        container.find('.days_ref').text(ref_days);
+        container.find('.hours_ref').text(ref_hours);
+        container.find('.minutes_ref').text(ref_minutes);
+        container.find('.seconds_ref').text(ref_seconds);
+    }, 222);
 }
 
 function login_succeed(token) {
@@ -147,17 +181,21 @@ function login_succeed(token) {
         socket.on('failure', function (msg) {
             switch (msg) {
                 case 'notyet': emitToastr('秒杀还没开始!'); break;
-                case 'awarded': emitToastr('你已经抢到[' + vm.awardname + ']了!'); break;
+                case 'awarded': emitToastr('已经抢到过啦，是[' + vm.awardname + ']!'); break;
                 case 'finished': emitToastr('票已经被抢完啦!'); break;
                 case 'again': emitToastr('差一点点就抢到啦!再继续试试!'); break;
+                case 'cheated': emitToastr('检测到你作弊啦!'); break;
             }
         });
         socket.on('message', function (data) {
+            console.log(data);
             if (data.t) {
                 // 校准服务器与本地时间差
-                countDown = data.t - Date.now();
-                serverStart = (new Date(vm.seckill.startAt)).getTime();
-                initCountdown(vm.seckill.startAt);
+                const new_time_difference = data.t - Date.now();
+                if (!time_difference || new_time_difference > time_difference) {
+                    time_difference = new_time_difference;
+                    initCountdown(new Date(serverStart + time_difference));
+                }
             }
             if (data.e) emitToastr(data.e, 'error');
             if (data.r !== undefined) vm.rest_count = data.r;
