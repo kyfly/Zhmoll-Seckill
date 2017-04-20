@@ -215,14 +215,14 @@ router.get('/seckill/:seckillid/awardlist', getSeckillById, (req, res, next) => 
 
 // 创建者主动秒杀活动奖品
 // get /api/seckill-management/seckill/:seckillid/fetchaward
-// router.get('/seckill/:seckillid/fetchaward', getSeckillById, function (req, res, next) {
-//   const seckill = req.seckill;
+router.get('/seckill/:seckillid/fetchaward', getSeckillById, function (req, res, next) {
+  const seckill = req.seckill;
 
-//   if (!seckill.enable)
-//     return res.json(util.reply(4601, '秒杀活动尚未启用！'));
+  if (!seckill.enable)
+    return res.json(util.reply(4601, '秒杀活动尚未启用！'));
 
-//   redis.Seckill.persist(seckill.id);
-//   res.json(util.reply(4603, '强制更新奖品名单成功'));
-// });
+  redis.Seckill.persistData(seckill.id);
+  res.json(util.reply(4603, '强制更新奖品名单成功'));
+});
 
 module.exports = router;
