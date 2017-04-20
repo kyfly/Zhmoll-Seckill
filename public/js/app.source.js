@@ -94,7 +94,6 @@ var vm = new Vue({
             if (serverStart === 0) return;
             if (serverTime - serverStart > -1000) {
                 if (now - vm.lastCommit > 140) {
-                    // for(let i = 0 ; i <80;i++)
                     socket.emit('submitkill');
                     vm.lastCommit = now;
                 }
@@ -188,13 +187,13 @@ function login_succeed(token) {
             }
         });
         socket.on('message', function (data) {
-            console.log(data);
             if (data.t) {
                 // 校准服务器与本地时间差
-                const new_time_difference = data.t - Date.now();
+                var now = Date.now();
+                var new_time_difference = data.t - now;
                 if (!time_difference || new_time_difference > time_difference) {
                     time_difference = new_time_difference;
-                    initCountdown(new Date(serverStart + time_difference));
+                    initCountdown(new Date(serverStart - time_difference));
                 }
             }
             if (data.e) emitToastr(data.e, 'error');
