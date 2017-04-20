@@ -1,4 +1,4 @@
-var socket;
+var s;
 var time_difference; // 服务器与本地的时间差
 var serverStart = 0; // 服务器活动开始时间
 var login_click_mutex = false; // 登录按钮互斥锁
@@ -159,7 +159,7 @@ function initCountdown(date) {
 
 function login_succeed(token) {
     vm.token = token;
-    socket = (function () {
+    s = (function () {
         var socket = io('/seckill', {
             reconnectionAttempts: 1,
             autoConnect: false,
