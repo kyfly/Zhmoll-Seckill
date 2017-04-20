@@ -100,7 +100,7 @@ var vm = new Vue({
                 }
                 return;
             }
-            emitToastr('秒杀还没开始!');
+            emitToastr('活动还没开始!');
         }
     }
 });
@@ -180,7 +180,7 @@ function login_succeed(token) {
         });
         socket.on('failure', function (msg) {
             switch (msg) {
-                case 'notyet': emitToastr('秒杀还没开始!'); break;
+                case 'notyet': emitToastr('活动还没开始!'); break;
                 case 'awarded': emitToastr('已经抢到过啦，是[' + vm.awardname + ']!'); break;
                 case 'finished': emitToastr('票已经被抢完啦!'); break;
                 case 'again': emitToastr('差一点点就抢到啦!再继续试试!'); break;
@@ -204,7 +204,7 @@ function login_succeed(token) {
         });
         socket.on('disconnect', function () {
             vm.isLogin = false;
-            emitToastr('与服务器连接中断');
+            emitToastr('服务器连接中断');
         });
         socket.on('connect_error', function (data) {
             emitToastr('服务器拒绝连接', 'error');
