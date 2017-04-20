@@ -94,7 +94,7 @@ var vm = new Vue({
             if (serverStart === 0) return;
             if (serverTime - serverStart > -1000) {
                 if (now - vm.lastCommit > 140) {
-                    socket.emit('submitkill');
+                    s.emit('submitkill');
                     vm.lastCommit = now;
                 }
                 return;
