@@ -3,6 +3,7 @@ var time_difference; // 服务器与本地的时间差
 var serverStart = 0; // 服务器活动开始时间
 var login_click_mutex = false; // 登录按钮互斥锁
 var countdown_timer;
+var click = 0;
 
 var vm = new Vue({
     el: "#app",
@@ -89,13 +90,15 @@ var vm = new Vue({
                 });
         },
         kill: function kill_btn() {
+            click++;
             var now = Date.now();
             var serverTime = now + time_difference;
             if (serverStart === 0) return;
             if (serverTime - serverStart > -1000) {
                 if (now - vm.lastCommit > 140) {
-                    s.emit('submitkill');
+                    s.emit('submitkill', click);
                     vm.lastCommit = now;
+                    click = 0;
                 }
                 return;
             }
@@ -171,22 +174,22 @@ function login_succeed(token) {
             if (localStorage[vm.seckillid + vm.field_uid] && localStorage[vm.seckillid + vm.field_uid] != '')
                 vm.awardname = localStorage[vm.seckillid + vm.field_uid];
         });
-        socket.on('succeed', function (name) {
-            emitToastr('恭喜你抢到[' + name + ']啦!', 'success');
-            localStorage[vm.seckillid + vm.field_uid] = vm.awardname = name;
-            // 伪实时余量处理
-            if (vm.rest_count > 0) vm.rest_count--;
+        socket.on('success', function (data) {
+            vm.rest_count = data.r;
+            emitToastr('恭喜你抢到[' + data.n + ']啦!', 'success');
+            localStorage[vm.seckillid + vm.field_uid] = vm.awardname = data.n;
         });
-        socket.on('failure', function (msg) {
-            switch (msg) {
+        socket.on('failure', function (data) {
+            vm.rest_count = data.r;
+            switch (data.w) {
                 case 'notyet': emitToastr('活动还没开始!'); break;
                 case 'awarded': emitToastr('已经抢到过啦，是[' + vm.awardname + ']!'); break;
                 case 'finished': emitToastr('票已经被抢完啦!'); break;
                 case 'again': emitToastr('差一点点就抢到啦!再继续试试!'); break;
-                case 'cheated': emitToastr('检测到你作弊啦!'); break;
+                case 'cheated': emitToastr('已经检测到你作弊啦!'); break;
             }
         });
-        socket.on('message', function (data) {
+        socket.on('sync', function (data) {
             if (data.t) {
                 // 校准服务器与本地时间差
                 var now = Date.now();
