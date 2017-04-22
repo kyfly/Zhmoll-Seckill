@@ -189,7 +189,7 @@ function login_succeed(token) {
                 case 'cheated': emitToastr('已经检测到你作弊啦!'); break;
             }
         });
-        socket.on('sync', function (data) {
+        socket.on('message', function (data) {
             if (data.t) {
                 // 校准服务器与本地时间差
                 var now = Date.now();
