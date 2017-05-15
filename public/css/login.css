@@ -60,7 +60,7 @@ ul, ol, li {
 	list-style: none;
 }
 body{
-	background: url('../img/bg-pc.jpg') 0 0/cover no-repeat;
+	background: url('../img/bg-shijia.jpg') 0 0/cover no-repeat;
 }
 body>div{
 	height: 100%;
@@ -281,7 +281,7 @@ button{
 }
 @media screen and (max-width:700px) {
 	body{
-	 background: url('../img/bg-mo3.jpg') 0 0/cover no-repeat;
+	 background: url('../img/bg-shijia.jpg') 0 0/cover no-repeat;
 	}	
 	ul.countdown li.seperator{
 		font-size: 54px;
